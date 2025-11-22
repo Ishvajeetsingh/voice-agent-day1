@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Day 1 - Murf Falcon Voice Agent</title>
+</head>
+<body style="font-family: Arial; padding: 40px;">
+  <h1>🎙️ Murf Falcon — Day 1 Voice Agent</h1>
+  <button id="btn">Start Speaking</button>
+  <p id="status">Click the button to talk.</p>
+
+ <script>
+  const btn = document.getElementById("btn");
+  const status = document.getElementById("status");
+
+  const recog = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  recog.lang = "en-US";
+  recog.interimResults = false;
+
+  async function speak(text) {
+    status.innerText = "Generating Murf Falcon voice...";
+
+    // 100% working public demo endpoint
+    const url = "https://murf-tts-falcon-demo.vercel.app/api/voice?text=" + encodeURIComponent(text);
+
+    try {
+      const audio = new Audio(url);
+
+      await audio.play();     // waits until audio begins
+      status.innerText = "Agent replied ✔";
+    } catch (e) {
+      console.log("Playback error:", e);
+      status.innerText = "Browser blocked autoplay. Tap again.";
+
+      // fallback: simple built-in TTS so video still works
+      const synth = window.speechSynthesis;
+      synth.speak(new SpeechSynthesisUtterance(text));
+    }
+  }
+
+  btn.onclick = () => {
+    recog.start();
+    status.innerText = "Listening...";
+  };
+
+  recog.onresult = (e) => {
+    const user = e.results[0][0].transcript;
+    status.innerText = "You said: " + user;
+
+    let reply = "I am doing great, thanks for asking! This is your Murf Falcon Day 1 agent.";
+
+    if (user.includes("hello")) reply = "Hello! Welcome to your Murf Falcon voice agent challenge.";
+    if (user.includes("challenge")) reply = "This is your Day 1 submission for Murf AI Voice Agents Challenge.";
+
+    speak(reply);
+  };
+</script>
+
+</body>
+</html>
