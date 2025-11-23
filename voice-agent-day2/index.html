@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>day 2 — coffee barista (pro ui)</title>
+  <meta name="description" content="coffee shop barista voice agent — day 2. professional ui, murf falcon tts, speech recog, json receipt." />
+  <style>
+    :root{
+      --bg:#0f1724; /* deep night */
+      --card:#0b1220;
+      --muted:#9aa6b2;
+      --accent:#c47f5a; /* coffee caramel */
+      --accent-2:#e7b07a;
+      --glass: rgba(255,255,255,0.04);
+      --glass-2: rgba(255,255,255,0.02);
+      --success:#6ee7b7;
+      --font-sans: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      font-family:var(--font-sans);
+      margin:0;
+      background:linear-gradient(180deg,var(--bg) 0%, #07101a 60%);
+      color:#e6eef6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:28px;display:flex;align-items:center;justify-content:center;
+    }
+
+    /* vertical a1 like poster card */
+    .stage{
+      width:900px; max-width:95vw; height:1300px; max-height:95vh;
+      background: linear-gradient(180deg,var(--card), rgba(11,18,32,0.9));
+      border-radius:24px; padding:36px; box-shadow: 0 20px 60px rgba(2,6,12,0.6);
+      display:grid; grid-template-rows: auto 1fr auto; gap:18px; overflow:hidden;
+    }
+
+    header{display:flex;align-items:center;gap:18px}
+    .brand{display:flex;flex-direction:column}
+    .brand h1{margin:0;font-size:36px;letter-spacing:0.4px}
+    .brand p{margin:0;color:var(--muted);font-size:13px}
+
+    .hero{display:grid;grid-template-columns: 1fr 420px; gap:20px; align-items:start}
+
+    /* left: conversation area */
+    .panel{background:linear-gradient(180deg,var(--glass),var(--glass-2)); border-radius:16px; padding:18px; min-height:640px; display:flex;flex-direction:column}
+
+    .status-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .status-bubble{display:flex;align-items:center;gap:10px}
+    .dot{width:12px;height:12px;border-radius:999px;background:var(--muted)}
+    .dot.listening{background:linear-gradient(90deg,var(--accent),var(--accent-2)) ; box-shadow:0 0 12px rgba(196,127,90,0.25)}
+
+    .controls{display:flex;gap:10px}
+    .btn{background:transparent;border:1px solid rgba(255,255,255,0.07);padding:10px 14px;border-radius:10px;color:inherit;cursor:pointer;font-weight:600}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#07101a;border:none; box-shadow:0 8px 30px rgba(196,127,90,0.12)}
+    .btn.ghost{background:transparent;border:1px dashed rgba(255,255,255,0.04)}
+
+    .conversation{flex:1; overflow:auto; padding-right:8px}
+    .msg{display:flex; gap:12px; margin-bottom:12px}
+    .msg.agent{align-items:flex-start}
+    .msg.user{justify-content:flex-end}
+    .bubble{max-width:78%; padding:12px 14px;border-radius:12px; font-size:15px}
+    .bubble.agent{background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.02)}
+    .bubble.user{background:linear-gradient(90deg,#0ea5a9, #06b6d4); color:#041018}
+
+    /* right: order card */
+    .order-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:16px;padding:18px; height:640px; display:flex;flex-direction:column}
+    .order-title{display:flex;align-items:center; justify-content:space-between}
+    .order-items{margin-top:12px; display:flex; flex-direction:column; gap:12px; flex:1; overflow:auto}
+    .receipt{background:rgba(0,0,0,0.2); padding:12px; border-radius:10px; color:var(--muted)}
+
+    /* cup visual */
+    .cup-wrap{display:flex; align-items:center; justify-content:center; padding:12px}
+    .cup{width:160px;height:180px;border-radius:20px 20px 18px 18px; background:linear-gradient(180deg,#fff,#f6eae2); position:relative; box-shadow: 0 12px 35px rgba(2,6,12,0.6)}
+    .cup.small{transform:scale(0.8)}
+    .cup.large{transform:scale(1.25)}
+    .cream{position:absolute; top:-20px; left:24px; right:24px; height:40px; border-radius:40px 40px 30px 30px; background:linear-gradient(180deg,#fff,#f4f4f4)}
+    .cup-handle{position:absolute; right:-28px; top:42px; width:48px; height:72px; border:10px solid rgba(255,255,255,0.18); border-left:10px solid transparent; border-radius:50%}
+
+    footer{display:flex;align-items:center;justify-content:space-between; color:var(--muted); font-size:13px}
+
+    /* responsive */
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr}
+      .order-card{height:auto}
+      .stage{height:auto}
+    }
+  </style>
+</head>
+<body>
+  <div class="stage" role="application" aria-label="coffee barista demo">
+    <header>
+      <div style="width:64px;height:64px;border-radius:12px;background:linear-gradient(180deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:#07101a;font-size:22px">ct</div>
+      <div class="brand">
+        <h1>coffee tokai — barista</h1>
+        <p>day 2 | murf falcon voice agent — professional demo</p>
+      </div>
+      <div style="margin-left:auto;color:var(--muted);text-align:right">
+        <div>built with: <strong>murf falcon</strong></div>
+        <div style="margin-top:6px">submission ready • record demo</div>
+      </div>
+    </header>
+
+    <main class="hero">
+      <section class="panel" aria-live="polite">
+        <div class="status-row">
+          <div class="status-bubble">
+            <div id="micDot" class="dot" aria-hidden="true"></div>
+            <div id="statusText">idle. click start to begin.</div>
+          </div>
+          <div class="controls">
+            <button id="startBtn" class="btn primary">start new order</button>
+            <button id="stopBtn" class="btn ghost">stop</button>
+            <button id="downloadBtn" class="btn">download json</button>
+          </div>
+        </div>
+
+        <div class="conversation" id="conversation" aria-live="polite">
+          <!-- messages injected here -->
+        </div>
+
+        <div style="margin-top:12px; display:flex; gap:8px; align-items:center; justify-content:space-between">
+          <div style="color:var(--muted); font-size:13px">tip: speak clearly, say e.g. "almond milk", and add commas for extras</div>
+          <div style="color:var(--muted); font-size:13px">mic permissions asked once</div>
+        </div>
+      </section>
+
+      <aside class="order-card" aria-label="order card">
+        <div class="order-title">
+          <div>
+            <div style="font-weight:700;font-size:18px">order summary</div>
+            <div style="color:var(--muted);font-size:13px">live preview & receipt</div>
+          </div>
+          <div style="text-align:right;color:var(--muted);font-size:13px">status: <span id="miniStatus">idle</span></div>
+        </div>
+
+        <div class="order-items">
+          <div class="receipt" id="receiptBox">no order yet.</div>
+
+          <div class="cup-wrap">
+            <div id="cup" class="cup small" aria-hidden="true">
+              <div id="cream" class="cream" style="display:none"></div>
+              <div class="cup-handle"></div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;">
+            <button id="clearBtn" class="btn">clear</button>
+            <button id="copyBtn" class="btn">copy json</button>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <div>press record & create linkedin video • include "built with murf falcon"</div>
+      <div>made for: murf ai voice agents challenge</div>
+    </footer>
+  </div>
+
+<script>
+// professional-ui script: stable multi-order, corrections, tts, visual cup and receipt
+// logic derived from earlier stable agent but upgraded with polished UI and animations
+
+const startBtn = document.getElementById('startBtn');
+const stopBtn = document.getElementById('stopBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+const clearBtn = document.getElementById('clearBtn');
+const copyBtn = document.getElementById('copyBtn');
+const conversation = document.getElementById('conversation');
+const statusText = document.getElementById('statusText');
+const micDot = document.getElementById('micDot');
+const receiptBox = document.getElementById('receiptBox');
+const miniStatus = document.getElementById('miniStatus');
+const cup = document.getElementById('cup');
+const cream = document.getElementById('cream');
+
+let recognition = null;
+let micStream = null;
+let recognitionRunning = false;
+let expectingAnswer = false;
+let activeOrder = false;
+
+const template = { drinkType:'', size:'', milk:'', extras:[], name:'' };
+let order = null;
+const flow = ['drinkType','size','milk','extras','name'];
+const prompts = {
+  drinkType: 'which drink would you like? latte, cappuccino, espresso or mocha?',
+  size: 'what size? small, medium or large?',
+  milk: 'what type of milk? regular, skimmed or almond?',
+  extras: 'any extras like whipped cream or caramel? say none if no extras.',
+  name: 'may i have your name please?'
+};
+
+function resetOrder(){ order = JSON.parse(JSON.stringify(template)); updateReceipt(); }
+function getNextField(){ for(const f of flow) if(order[f]==='' || (Array.isArray(order[f]) && order[f].length===0)) return f; return null; }
+
+// small correction dictionary
+function applyCorrections(s){ s = s.toLowerCase(); if(s.includes('aman')) return 'almond'; if(s.includes('ishwajit')) return 'ishvajeet'; return s; }
+
+function addConversation(role, text){ const wrap = document.createElement('div'); wrap.className = 'msg ' + (role==='agent'?'agent':'user'); const b = document.createElement('div'); b.className='bubble ' + (role==='agent'?'agent':'user'); b.textContent = text; wrap.appendChild(b); conversation.appendChild(wrap); conversation.scrollTop = conversation.scrollHeight; }
+
+async function ttsPlay(text){ addConversation('agent', text); statusText.textContent='barista speaking...'; miniStatus.textContent='speaking'; micDot.classList.remove('listening');
+  const url = 'https://murf-tts-falcon-demo.vercel.app/api/voice?text=' + encodeURIComponent(text);
+  const audio = new Audio(url);
+  try{ await audio.play().catch(()=>{ window.speechSynthesis.cancel(); window.speechSynthesis.speak(new SpeechSynthesisUtterance(text)); }); } catch(e){ window.speechSynthesis.cancel(); window.speechSynthesis.speak(new SpeechSynthesisUtterance(text)); }
+  // small delay to allow tts to start
+  await new Promise(r=>setTimeout(r,600));
+  statusText.textContent='listening...'; miniStatus.textContent='listening'; micDot.classList.add('listening');
+}
+
+function updateReceipt(){ if(!order) { receiptBox.textContent='no order yet.'; return; } receiptBox.textContent = JSON.stringify(order, null, 2); // visual cup
+  // size mapping
+  if(order.size==='small') { cup.classList.remove('large'); cup.classList.add('small'); }
+  else if(order.size==='large') { cup.classList.add('large'); cup.classList.remove('small'); }
+  else { cup.classList.remove('large'); cup.classList.remove('small'); }
+  // cream on extras
+  if(order.extras && order.extras.some(x=>x.includes('whip')||x.includes('cream'))) { cream.style.display='block'; } else { cream.style.display='none'; }
+}
+
+function downloadJson(){ const blob = new Blob([JSON.stringify(order,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='order_output.json'; document.body.appendChild(a); a.click(); a.remove(); }
+
+// speech handling
+function createRecognition(){ const R = window.SpeechRecognition || window.webkitSpeechRecognition; if(!R) return null; const r = new R(); r.lang='en-US'; r.interimResults=false; r.continuous=true; r.maxAlternatives=1;
+  r.onresult = (ev)=>{ const last = ev.results[ev.results.length-1]; const txt = last[0].transcript; if(expectingAnswer){ // process
+      addConversation('user', txt);
+      handleUserReply(txt);
+    } else { /* ignore background speech */ }
+  };
+  r.onerror = (e)=>{ console.warn('recog error',e); if(e && e.error==='not-allowed'){ // mic blocked
+      statusText.textContent='mic blocked. use fallback or allow mic.'; micDot.classList.remove('listening'); }
+  };
+  r.onend = ()=>{ // auto-restart if active and mic open
+    if(micStream && activeOrder){ try { r.start(); } catch(e){ console.warn('start err',e);} }
+  };
+  return r;
+}
+
+async function ensureMic(){ if(micStream) return true; try{ micStream = await navigator.mediaDevices.getUserMedia({audio:true}); return true; } catch(e){ micStream=null; return false; } }
+
+async function startOrderFlow(){ resetOrder(); activeOrder=true; conversation.innerHTML=''; updateReceipt(); const micOk = await ensureMic(); if(!recognition) recognition = createRecognition(); if(micOk && recognition && !recognitionRunning){ try{ recognition.start(); recognitionRunning=true; } catch(e){ /*pass*/ } }
+  // ask first question
+  await ttsPlay(prompts[getNextField()]); expectingAnswer=true;
+}
+
+async function handleUserReply(raw){ if(!activeOrder || !expectingAnswer) return; let text = raw.trim(); const field = getNextField(); if(!field) return; // apply corrections
+  text = applyCorrections(text);
+  if(field==='extras'){ if(text==='') order.extras=[]; else if(text.includes('none')) order.extras=[]; else order.extras = text.split(/,| and /).map(s=>s.trim()).filter(Boolean); }
+  else order[field] = text;
+  expectingAnswer=false; updateReceipt(); // next
+  const next = getNextField(); if(next){ await ttsPlay(prompts[next]); expectingAnswer=true; }
+  else { // finish
+    activeOrder=false; expectingAnswer=false; await ttsPlay('your order is complete. i saved your receipt. thank you!'); downloadJson(); updateReceipt(); miniStatus.textContent='idle'; micDot.classList.remove('listening'); }
+}
+
+// ui bindings
+startBtn.addEventListener('click', ()=>{ startOrderFlow().catch(e=>console.error(e)); });
+stopBtn.addEventListener('click', ()=>{ activeOrder=false; expectingAnswer=false; statusText.textContent='stopped'; micDot.classList.remove('listening'); try{ if(recognition && recognitionRunning) recognition.stop(); } catch(e){} });
+
+downloadBtn.addEventListener('click', ()=>{ if(order) downloadJson(); });
+clearBtn.addEventListener('click', ()=>{ resetOrder(); updateReceipt(); });
+copyBtn.addEventListener('click', ()=>{ navigator.clipboard.writeText(JSON.stringify(order,null,2)).then(()=>{ alert('copied to clipboard'); }).catch(()=>{}); });
+
+// init
+resetOrder(); updateReceipt(); recognition = createRecognition();
+
+</script>
+</body>
+</html>
