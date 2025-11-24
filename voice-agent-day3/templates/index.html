@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Wellness Companion</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Wellness companion</h1>
+     
+    </header>
+
+    <main>
+      <div class="left">
+        <div id="transcript" class="card">press start to begin a check-in</div>
+
+        <div class="controls">
+          <button id="startBtn">Start Check-In</button>
+          <button id="stopBtn">Stop</button>
+          <button id="downloadBtn">Download wellness_log.json</button>
+        </div>
+
+        <div id="logArea" class="card"></div>
+      </div>
+
+      <aside class="right">
+        <div class="card">
+          <h3>previous check-in</h3>
+          <pre id="lastEntry">loading...</pre>
+        </div>
+
+        <div class="card">
+          <h3>live summary</h3>
+          <pre id="liveSummary">waiting...</pre>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <p>built with murf falcon • day 3</p>
+    </footer>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

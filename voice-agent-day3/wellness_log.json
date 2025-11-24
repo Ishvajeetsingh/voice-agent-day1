@@ -1,0 +1,35 @@
+[
+  {
+    "timestamp": "2025-11-24T14:48:41.760706Z",
+    "mood": "How are you feeling? OK, little tired.",
+    "energy": "Medium.",
+    "stress": "College assignments.",
+    "objectives": [
+      "College assignments",
+      "different tasks."
+    ],
+    "summary": "You feel How are you feeling? OK, little tired., your energy is Medium., and your goals are College assignments, different tasks."
+  },
+  {
+    "timestamp": "2025-11-24T15:07:02.073455Z",
+    "mood": "I'm feeling good.",
+    "energy": "Medium.",
+    "stress": "Not really, it's a normal day.",
+    "objectives": [
+      "Study a bit",
+      "clean my desk."
+    ],
+    "summary": "You feel I'm feeling good., your energy is Medium., and your goals are Study a bit, clean my desk."
+  },
+  {
+    "timestamp": "2025-11-24T15:36:05.208740Z",
+    "mood": "great",
+    "energy": "medium",
+    "stress": "Not really. It's a nice day.",
+    "objectives": [
+      "Exercise later",
+      "play cricket for an hour."
+    ],
+    "summary": "You feel great, your energy is medium, and your goals are Exercise later, play cricket for an hour."
+  }
+]
