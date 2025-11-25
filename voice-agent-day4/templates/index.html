@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en" data-mode="idle">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Teach The Tutor — Day 4</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Teach the tutor</h1>
+        <p class="sub">Active recall coach — learn, quiz, teach back</p>
+      </div>
+      <div class="mode-chip" id="modeChip">Mode: Idle</div>
+    </header>
+
+    <main class="layout">
+      <section class="main-area">
+        <div class="controls card">
+          <div class="row">
+            <select id="conceptSelect" aria-label="Select concept"></select>
+
+            <div class="modes" role="tablist" aria-label="modes">
+              <button id="learnBtn" class="mode-btn" data-mode="learn">Learn</button>
+              <button id="quizBtn" class="mode-btn" data-mode="quiz">Quiz</button>
+              <button id="teachBtn" class="mode-btn" data-mode="teach_back">Teach back</button>
+            </div>
+
+            <div class="mic">
+              <button id="startMic" class="glass">Start</button>
+              <button id="stopMic" class="glass">Stop</button>
+            </div>
+          </div>
+
+          <div id="modeLabel" class="mode-label">Mode: Idle</div>
+        </div>
+
+        <div id="transcript" class="card big">Transcript will appear here</div>
+        <div id="assistant" class="card big">Assistant responses will show here</div>
+      </section>
+
+      <aside class="sidebar">
+        <div class="card">
+          <h3>Current concept</h3>
+          <pre id="conceptBox">Loading...</pre>
+        </div>
+
+        <div class="card">
+          <h3>Feedback</h3>
+          <pre id="feedbackBox">No feedback yet</pre>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="foot">
+      <small>Built with Murf Falcon • Day 4</small>
+    </footer>
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>

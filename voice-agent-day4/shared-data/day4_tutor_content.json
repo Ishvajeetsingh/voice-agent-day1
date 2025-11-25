@@ -1,0 +1,20 @@
+[
+  {
+    "id": "variables",
+    "title": "Variables",
+    "summary": "Variables store values so you can reuse and modify them later in a program. Think of them as labeled boxes that hold information like numbers or text.",
+    "sample_question": "What is a variable and why is it useful?"
+  },
+  {
+    "id": "loops",
+    "title": "Loops",
+    "summary": "Loops let you repeat an action multiple times automatically. For loops run a known number of times, while while loops run until a condition changes.",
+    "sample_question": "Explain the difference between a for loop and a while loop."
+  },
+  {
+    "id": "functions",
+    "title": "Functions",
+    "summary": "Functions are named blocks of code that perform a specific task. They help make code modular, reusable, and easier to test.",
+    "sample_question": "What is a function and how does it help organize code?"
+  }
+]
