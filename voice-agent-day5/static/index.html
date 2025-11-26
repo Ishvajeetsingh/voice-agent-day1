@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Razorpay Voice SDR Agent</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<!-- 🌟 HERO LANDING SCREEN -->
+<div id="hero">
+    <h1 class="title">Razorpay Voice SDR</h1>
+    <p class="subtitle">AI Voice-Powered Sales Assistant</p>
+
+    <div id="card-row">
+        <div class="mode-card"><h2>Answer FAQs</h2><p>Pricing • Features • Product Fit</p></div>
+        <div class="mode-card"><h2>Generate Leads</h2><p>Collect Name • Email • Company • Role</p></div>
+        <div class="mode-card"><h2>Schedule Demo</h2><p>Book Meeting Slots Directly</p></div>
+    </div>
+
+    <button id="startBtn" class="start-btn">🎤 Start Conversation</button>
+</div>
+
+
+
+<!-- 🌌 POPUP CONVERSATION UI -->
+<div id="chatModal">
+
+    <div id="chatWindow">
+
+        <div id="chatHeader">
+            <h2>Voice Assistant Live</h2>
+            <button id="closeModal">✖</button>
+        </div>
+
+        <div id="wave"></div> <!-- 🔥 animated waveform -->
+
+        <div id="transcript" class="chatArea"></div>
+
+        <div id="leadPanel">
+            <h3>Lead Info</h3>
+            <div><b>Name:</b> <span id="leadName">-</span></div>
+            <div><b>Company:</b> <span id="leadCompany">-</span></div>
+            <div><b>Email:</b> <span id="leadEmail">-</span></div>
+            <div><b>Role:</b> <span id="leadRole">-</span></div>
+            <div><b>Use Case:</b> <span id="leadUseCase">-</span></div>
+            <div><b>Team Size:</b> <span id="leadTeamSize">-</span></div>
+            <div><b>Timeline:</b> <span id="leadTimeline">-</span></div>
+        </div>
+
+        <button id="stopBtn" class="stop-btn" disabled>⏹ Stop</button>
+    </div>
+</div>
+
+<script src="/static/script.js"></script>
+</body>
+</html>

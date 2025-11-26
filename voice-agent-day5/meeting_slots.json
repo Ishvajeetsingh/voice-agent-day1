@@ -1,0 +1,28 @@
+{
+  "available_slots": [
+    {
+      "id": 1,
+      "date": "2025-11-28",
+      "day": "Friday",
+      "time": "11:00 AM IST",
+      "duration": "30 minutes",
+      "available": true
+    },
+    {
+      "id": 2,
+      "date": "2025-11-29",
+      "day": "Saturday",
+      "time": "2:00 PM IST",
+      "duration": "30 minutes",
+      "available": true
+    },
+    {
+      "id": 3,
+      "date": "2025-12-02",
+      "day": "Monday",
+      "time": "10:00 AM IST",
+      "duration": "30 minutes",
+      "available": true
+    }
+  ]
+}

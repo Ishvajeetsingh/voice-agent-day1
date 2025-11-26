@@ -1,0 +1,59 @@
+{
+  "company": {
+    "name": "Razorpay",
+    "description": "Razorpay is India's leading payment gateway that enables businesses to accept, process, and disburse payments with ease. We provide a full-stack financial solution including payment gateway, payment links, subscriptions, smart routing, and business banking."
+  },
+  "features": [
+    "Payment Gateway with 100+ payment modes",
+    "UPI, Cards, Wallets, Net Banking support",
+    "Instant Settlements",
+    "Smart Routing for higher success rates",
+    "Subscription and Recurring Payments",
+    "Payment Links and QR codes",
+    "Invoicing and Billing",
+    "Route mobile SDKs for Android and iOS",
+    "Business Banking and Current Accounts",
+    "Vendor Payouts and Bulk Transfers"
+  ],
+  "pricing": {
+    "description": "We charge a simple transaction fee of 2% per successful payment. No setup fees, no annual maintenance charges. You only pay when you earn. For high volume businesses, we offer custom pricing. International payments are charged at 3%.",
+    "details": {
+      "domestic": "2% per transaction",
+      "international": "3% per transaction",
+      "setup_fee": "₹0",
+      "annual_fee": "₹0"
+    }
+  },
+  "target_audience": [
+    "E-commerce businesses",
+    "SaaS companies",
+    "EdTech platforms",
+    "Freelancers and creators",
+    "SMBs and enterprises",
+    "Subscription-based businesses",
+    "Marketplaces",
+    "Online service providers"
+  ],
+  "common_faqs": [
+    {
+      "question": "Is there a free trial?",
+      "answer": "Yes! You can sign up for free and test our payment gateway in sandbox mode with no charges. When you go live, you only pay per successful transaction."
+    },
+    {
+      "question": "How long does integration take?",
+      "answer": "Integration is very simple. Most developers complete basic integration in under 2 hours using our detailed documentation and SDKs. We support REST APIs, mobile SDKs, and no-code solutions like payment links."
+    },
+    {
+      "question": "What kind of support do you provide?",
+      "answer": "We offer 24/7 customer support via email, phone, and chat. You also get a dedicated account manager for enterprise plans. Our documentation is comprehensive with code samples in multiple languages."
+    },
+    {
+      "question": "Do you support international payments?",
+      "answer": "Yes, we support international card payments in over 100 currencies. We're licensed and compliant with global payment standards including PCI DSS Level 1 certification."
+    },
+    {
+      "question": "How fast are settlements?",
+      "answer": "With Razorpay Instant Settlements, you can get funds in your bank account within seconds for a small additional fee. Standard settlements happen in T+2 days at no extra cost."
+    }
+  ]
+}
