@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Agent - Quick Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #0a0a0f;
+            color: white;
+        }
+        .status {
+            padding: 20px;
+            background: #1a1a24;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #3b82f6;
+            color: white;
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        button.listening {
+            background: #ef4444;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .log {
+            background: #13131a;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .log div {
+            margin: 5px 0;
+            padding: 5px;
+            border-left: 3px solid #3b82f6;
+            padding-left: 10px;
+        }
+        .agent { border-left-color: #10b981; }
+        .user { border-left-color: #3b82f6; }
+        .system { border-left-color: #f59e0b; }
+    </style>
+</head>
+<body>
+    <h1>🏦 Fraud Alert Voice Agent - Quick Test</h1>
+    
+    <div class="status" id="status">
+        <h3>Status: <span id="statusText">Initializing...</span></h3>
+        <p>State: <span id="stateText">IDLE</span></p>
+        <p id="voiceStatus">Loading voices...</p>
+    </div>
+
+    <div>
+        <button id="startBtn" disabled>Start Session</button>
+        <button id="micBtn" disabled>Push to Talk</button>
+        <button id="endBtn" disabled>End Session</button>
+        <button id="testBtn">Test Speech</button>
+    </div>
+
+    <div class="log" id="log">
+        <div class="system">Initializing agent...</div>
+    </div>
+
+    <script>
+        let recognition;
+        let isListening = false;
+        let isSpeaking = false;
+        let state = 'IDLE';
+
+        const elements = {
+            startBtn: document.getElementById('startBtn'),
+            micBtn: document.getElementById('micBtn'),
+            endBtn: document.getElementById('endBtn'),
+            testBtn: document.getElementById('testBtn'),
+            status: document.getElementById('statusText'),
+            stateText: document.getElementById('stateText'),
+            voiceStatus: document.getElementById('voiceStatus'),
+            log: document.getElementById('log')
+        };
+
+        // Initialize Speech Recognition
+        function initSpeechRecognition() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                log('ERROR: Speech recognition not supported. Use Chrome or Edge!', 'system');
+                return false;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            recognition.onstart = () => {
+                isListening = true;
+                elements.micBtn.classList.add('listening');
+                elements.micBtn.textContent = 'Listening...';
+                log('Microphone started', 'system');
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                log(transcript, 'user');
+                handleInput(transcript);
+            };
+
+            recognition.onerror = (event) => {
+                log('Error: ' + event.error, 'system');
+                isListening = false;
+                elements.micBtn.classList.remove('listening');
+                elements.micBtn.textContent = 'Push to Talk';
+            };
+
+            recognition.onend = () => {
+                isListening = false;
+                elements.micBtn.classList.remove('listening');
+                elements.micBtn.textContent = 'Push to Talk';
+                
+                if (state !== 'IDLE' && !isSpeaking) {
+                    elements.micBtn.disabled = false;
+                }
+            };
+
+            log('Speech recognition initialized', 'system');
+            return true;
+        }
+
+        // Initialize Text-to-Speech
+        function initTTS() {
+            const voices = speechSynthesis.getVoices();
+            
+            if (voices.length > 0) {
+                elements.voiceStatus.textContent = `✅ ${voices.length} voices loaded`;
+                log(`Voices loaded: ${voices.length}`, 'system');
+                elements.startBtn.disabled = false;
+                elements.testBtn.disabled = false;
+                return true;
+            } else {
+                elements.voiceStatus.textContent = '⏳ Loading voices...';
+                return false;
+            }
+        }
+
+        // Speak function
+        async function speak(text) {
+            log(text, 'agent');
+            
+            isSpeaking = true;
+            elements.micBtn.disabled = true;
+            elements.status.textContent = 'Speaking';
+
+            return new Promise((resolve) => {
+                speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;
+                utterance.pitch = 1.0;
+                
+                const voices = speechSynthesis.getVoices();
+                const voice = voices.find(v => v.lang.startsWith('en')) || voices[0];
+                if (voice) utterance.voice = voice;
+
+                utterance.onend = () => {
+                    isSpeaking = false;
+                    elements.status.textContent = 'Ready';
+                    setTimeout(() => {
+                        if (state !== 'IDLE') {
+                            elements.micBtn.disabled = false;
+                        }
+                        resolve();
+                    }, 500);
+                };
+
+                utterance.onerror = () => {
+                    isSpeaking = false;
+                    resolve();
+                };
+
+                setTimeout(() => speechSynthesis.speak(utterance), 100);
+            });
+        }
+
+        // Handle user input
+        async function handleInput(text) {
+            elements.micBtn.disabled = true;
+
+            if (state === 'AWAITING_CASE') {
+                if (text.toLowerCase().includes('john')) {
+                    state = 'VERIFYING';
+                    await speak("I have located the case for John Doe. What is your birth city?");
+                } else {
+                    await speak("I couldn't find that case. Try saying 'John Doe'");
+                }
+            } else if (state === 'VERIFYING') {
+                if (text.toLowerCase().includes('delhi')) {
+                    state = 'CONFIRMING';
+                    await speak("Thank you. We detected a transaction for 14,499 rupees at ABC Industries. Did you authorize this? Say yes or no.");
+                } else {
+                    await speak("That answer doesn't match. This session will end.");
+                    endSession();
+                }
+            } else if (state === 'CONFIRMING') {
+                if (text.toLowerCase().includes('yes')) {
+                    await speak("Thank you. The transaction is marked as safe. Have a great day!");
+                    log('✅ DATABASE UPDATED: confirmed_safe', 'system');
+                } else {
+                    await speak("I'm blocking your card immediately. You will receive a refund in 3 to 5 days.");
+                    log('🚫 DATABASE UPDATED: confirmed_fraud', 'system');
+                }
+                setTimeout(endSession, 2000);
+            }
+
+            elements.stateText.textContent = state;
+        }
+
+        // Start session
+        async function startSession() {
+            state = 'AWAITING_CASE';
+            elements.stateText.textContent = state;
+            elements.startBtn.disabled = true;
+            elements.endBtn.disabled = false;
+            elements.status.textContent = 'Active';
+
+            await speak("Good day! This is SecureBank Fraud Detection. Please tell me your name. You can say 'John Doe'");
+        }
+
+        // End session
+        function endSession() {
+            if (recognition) recognition.stop();
+            speechSynthesis.cancel();
+            
+            state = 'IDLE';
+            elements.stateText.textContent = state;
+            elements.startBtn.disabled = false;
+            elements.micBtn.disabled = true;
+            elements.endBtn.disabled = true;
+            elements.status.textContent = 'Ready';
+            
+            log('Session ended', 'system');
+        }
+
+        // Toggle microphone
+        function toggleMic() {
+            if (isListening) {
+                recognition.stop();
+            } else {
+                try {
+                    recognition.start();
+                } catch (error) {
+                    log('Error starting mic: ' + error, 'system');
+                }
+            }
+        }
+
+        // Test speech
+        async function testSpeech() {
+            await speak("Hello! This is a test. If you can hear me, speech synthesis is working correctly.");
+        }
+
+        // Log function
+        function log(text, type = 'agent') {
+            const div = document.createElement('div');
+            div.className = type;
+            const time = new Date().toLocaleTimeString();
+            div.textContent = `[${time}] ${text}`;
+            elements.log.appendChild(div);
+            elements.log.scrollTop = elements.log.scrollHeight;
+        }
+
+        // Event listeners
+        elements.startBtn.addEventListener('click', startSession);
+        elements.micBtn.addEventListener('click', toggleMic);
+        elements.endBtn.addEventListener('click', endSession);
+        elements.testBtn.addEventListener('click', testSpeech);
+
+        // Initialize everything
+        window.addEventListener('load', () => {
+            log('Page loaded', 'system');
+            
+            // Try to init TTS immediately
+            if (!initTTS()) {
+                // If voices not ready, wait for them
+                speechSynthesis.addEventListener('voiceschanged', () => {
+                    log('Voices changed event', 'system');
+                    initTTS();
+                });
+                
+                // Force check after delay
+                setTimeout(() => {
+                    if (!initTTS()) {
+                        log('Forcing voice load...', 'system');
+                        speechSynthesis.getVoices();
+                        setTimeout(initTTS, 500);
+                    }
+                }, 500);
+            }
+            
+            // Init speech recognition
+            if (initSpeechRecognition()) {
+                elements.micBtn.disabled = false;
+            }
+            
+            elements.status.textContent = 'Ready';
+            log('✅ Agent ready! Click "Start Session" to begin', 'system');
+        });
+    </script>
+</body>
+</html>

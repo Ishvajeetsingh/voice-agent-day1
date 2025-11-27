@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="data:,">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Alert Voice Agent - SecureBank</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <rect width="32" height="32" rx="8" fill="#3b82f6"/>
+                    <path d="M16 8L8 14V24H24V14L16 8Z" fill="white"/>
+                </svg>
+                <h1>SecureBank Fraud Detection</h1>
+            </div>
+            <div class="status-badge" id="statusBadge">
+                <span class="status-dot"></span>
+                <span id="statusText">Ready</span>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Case Selection Panel -->
+            <div class="panel case-panel" id="casePanel">
+                <h2>Select Fraud Case</h2>
+                <p class="hint">Say the customer name or case number to begin</p>
+                <div class="case-list" id="caseList">
+                    <!-- Cases will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Voice Interface Panel -->
+            <div class="panel voice-panel" id="voicePanel">
+                <div class="waveform-container">
+                    <canvas id="waveform"></canvas>
+                    <div class="waveform-overlay">
+                        <div class="agent-avatar">
+                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                <circle cx="24" cy="24" r="24" fill="#3b82f6" opacity="0.2"/>
+                                <circle cx="24" cy="24" r="18" fill="#3b82f6"/>
+                                <path d="M24 16C21.79 16 20 17.79 20 20V24C20 26.21 21.79 28 24 28C26.21 28 28 26.21 28 24V20C28 17.79 26.21 16 24 16Z" fill="white"/>
+                                <path d="M32 24C32 28.42 28.42 32 24 32C19.58 32 16 28.42 16 24" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <p class="agent-status" id="agentStatus">AI Agent Ready</p>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn-primary" id="startBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            <path d="M12 8V12L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        Start Session
+                    </button>
+                    <button class="btn-secondary" id="micBtn" disabled>
+                        <svg id="micIcon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 1C10.34 1 9 2.34 9 4V12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12V4C15 2.34 13.66 1 12 1Z" fill="currentColor"/>
+                            <path d="M19 10V12C19 15.87 15.87 19 12 19C8.13 19 5 15.87 5 12V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M12 19V23M8 23H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <span id="micText">Push to Talk</span>
+                    </button>
+                    <button class="btn-danger" id="endBtn" disabled>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        End Call
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Panel -->
+            <div class="panel chat-panel">
+                <div class="chat-header">
+                    <h3>Conversation Log</h3>
+                    <button class="btn-icon" id="clearChat" title="Clear chat">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 6H21M8 6V4C8 2.9 8.9 2 10 2H14C15.1 2 16 2.9 16 4V6M19 6V20C19 21.1 18.1 22 17 22H7C5.9 22 5 21.1 5 20V6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="chat-message system">
+                        <div class="message-content">
+                            <p>Welcome to SecureBank Fraud Detection. Please start a session to begin.</p>
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Case Details Panel -->
+            <div class="panel details-panel" id="detailsPanel" style="display: none;">
+                <h3>Case Details</h3>
+                <div id="caseDetails"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="fraudAgent.js"></script>
+</body>
+</html>
