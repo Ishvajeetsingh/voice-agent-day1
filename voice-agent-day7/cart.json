@@ -1,0 +1,39 @@
+{
+  "items": [
+    {
+      "id": "bread_whole_wheat",
+      "name": "Whole Wheat Bread",
+      "category": "Bakery",
+      "price": 45,
+      "units": "400g",
+      "tags": [
+        "vegan",
+        "bread"
+      ],
+      "quantity": 4
+    },
+    {
+      "id": "peanut_butter",
+      "name": "Peanut Butter",
+      "category": "Groceries",
+      "price": 120,
+      "units": "500g",
+      "tags": [
+        "vegan"
+      ],
+      "quantity": 2
+    },
+    {
+      "id": "cookies_chocolate",
+      "name": "Chocolate Cookies",
+      "category": "Snacks",
+      "price": 65,
+      "units": "200g",
+      "tags": [
+        "vegetarian"
+      ],
+      "quantity": 1
+    }
+  ],
+  "total": 485
+}

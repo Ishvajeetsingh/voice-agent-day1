@@ -1,0 +1,131 @@
+
+[
+  {
+    "id": "bread_whole_wheat",
+    "name": "Whole Wheat Bread",
+    "category": "Bakery",
+    "price": 45,
+    "units": "400g",
+    "tags": ["vegan", "bread"]
+  },
+  {
+    "id": "milk_regular",
+    "name": "Fresh Milk",
+    "category": "Dairy",
+    "price": 60,
+    "units": "1L",
+    "tags": ["vegetarian", "milk"]
+  },
+  {
+    "id": "eggs_regular",
+    "name": "Fresh Eggs",
+    "category": "Dairy",
+    "price": 80,
+    "units": "6 pieces",
+    "tags": ["vegetarian", "eggs"]
+  },
+  {
+    "id": "peanut_butter",
+    "name": "Peanut Butter",
+    "category": "Groceries",
+    "price": 120,
+    "units": "500g",
+    "tags": ["vegan"]
+  },
+  {
+    "id": "pasta_spaghetti",
+    "name": "Spaghetti Pasta",
+    "category": "Groceries",
+    "price": 85,
+    "units": "500g",
+    "tags": ["vegan", "pasta"]
+  },
+  {
+    "id": "pasta_sauce",
+    "name": "Tomato Pasta Sauce",
+    "category": "Groceries",
+    "price": 95,
+    "units": "400g",
+    "tags": ["vegan"]
+  },
+  {
+    "id": "cheese_cheddar",
+    "name": "Cheddar Cheese",
+    "category": "Dairy",
+    "price": 150,
+    "units": "200g",
+    "tags": ["vegetarian", "cheese"]
+  },
+  {
+    "id": "potato_chips",
+    "name": "Potato Chips",
+    "category": "Snacks",
+    "price": 40,
+    "units": "150g",
+    "tags": ["vegetarian"]
+  },
+  {
+    "id": "coke_diet",
+    "name": "Diet Coke",
+    "category": "Beverages",
+    "price": 50,
+    "units": "330ml",
+    "tags": ["vegan"]
+  },
+  {
+    "id": "bananas",
+    "name": "Fresh Bananas",
+    "category": "Fruits",
+    "price": 30,
+    "units": "3 pieces",
+    "tags": ["vegan"]
+  },
+  {
+    "id": "yogurt_plain",
+    "name": "Plain Yogurt",
+    "category": "Dairy",
+    "price": 45,
+    "units": "200g",
+    "tags": ["vegetarian"]
+  },
+  {
+    "id": "chicken_breast",
+    "name": "Chicken Breast",
+    "category": "Meat",
+    "price": 180,
+    "units": "500g",
+    "tags": ["non-veg"]
+  },
+  {
+    "id": "rice_basmati",
+    "name": "Basmati Rice",
+    "category": "Groceries",
+    "price": 120,
+    "units": "1kg",
+    "tags": ["vegan"]
+  },
+  {
+    "id": "cookies_chocolate",
+    "name": "Chocolate Cookies",
+    "category": "Snacks",
+    "price": 65,
+    "units": "200g",
+    "tags": ["vegetarian"]
+  },
+  {
+    "id": "orange_juice",
+    "name": "Orange Juice",
+    "category": "Beverages",
+    "price": 90,
+    "units": "1L",
+    "tags": ["vegan"]
+  },
+  {
+    "id": "sandwich_ready",
+    "name": "Ready-to-Eat Sandwich",
+    "category": "Ready-to-Eat",
+    "price": 75,
+    "units": "1 piece",
+    "tags": ["vegetarian"]
+  }
+]

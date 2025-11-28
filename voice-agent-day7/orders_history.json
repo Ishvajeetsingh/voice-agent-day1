@@ -1,0 +1,78 @@
+[
+  {
+    "order_id": "ORD1704",
+    "timestamp": "2025-11-28T01:06:34.044595",
+    "items": [
+      {
+        "id": "milk_regular",
+        "name": "Fresh Milk",
+        "category": "Dairy",
+        "price": 60,
+        "units": "1L",
+        "tags": [
+          "vegetarian",
+          "milk"
+        ],
+        "quantity": 2
+      },
+      {
+        "id": "bread_whole_wheat",
+        "name": "Whole Wheat Bread",
+        "category": "Bakery",
+        "price": 45,
+        "units": "400g",
+        "tags": [
+          "vegan",
+          "bread"
+        ],
+        "quantity": 1
+      }
+    ],
+    "total": 165,
+    "status": "delivered"
+  },
+  {
+    "order_id": "ORD3243",
+    "timestamp": "2025-11-28T01:52:08.487438",
+    "items": [
+      {
+        "id": "bread_whole_wheat",
+        "name": "Whole Wheat Bread",
+        "category": "Bakery",
+        "price": 45,
+        "units": "400g",
+        "tags": [
+          "vegan",
+          "bread"
+        ],
+        "quantity": 4
+      },
+      {
+        "id": "milk_regular",
+        "name": "Fresh Milk",
+        "category": "Dairy",
+        "price": 60,
+        "units": "1L",
+        "tags": [
+          "vegetarian",
+          "milk"
+        ],
+        "quantity": 2
+      },
+      {
+        "id": "pasta_spaghetti",
+        "name": "Spaghetti Pasta",
+        "category": "Groceries",
+        "price": 85,
+        "units": "500g",
+        "tags": [
+          "vegan",
+          "pasta"
+        ],
+        "quantity": 1
+      }
+    ],
+    "total": 385,
+    "status": "delivered"
+  }
+]

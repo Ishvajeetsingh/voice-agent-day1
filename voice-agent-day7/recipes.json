@@ -1,0 +1,23 @@
+
+{
+  "peanut butter sandwich": [
+    {"id": "bread_whole_wheat", "quantity": 2},
+    {"id": "peanut_butter", "quantity": 1}
+  ],
+  "pasta": [
+    {"id": "pasta_spaghetti", "quantity": 1},
+    {"id": "pasta_sauce", "quantity": 1},
+    {"id": "cheese_cheddar", "quantity": 1}
+  ],
+  "breakfast": [
+    {"id": "bread_whole_wheat", "quantity": 1},
+    {"id": "eggs_regular", "quantity": 1},
+    {"id": "milk_regular", "quantity": 1},
+    {"id": "bananas", "quantity": 1}
+  ],
+  "snacks": [
+    {"id": "potato_chips", "quantity": 1},
+    {"id": "coke_diet", "quantity": 1},
+    {"id": "cookies_chocolate", "quantity": 1}
+  ]
+}

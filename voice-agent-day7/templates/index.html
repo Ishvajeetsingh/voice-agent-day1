@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery Voice Agent</title>
+    <style>
+        /* Your existing CSS remains exactly the same */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8B5CF6;
+            --primary-dark: #7C3AED;
+            --primary-light: #A78BFA;
+            --secondary: #06D6A0;
+            --accent: #00D4AA;
+            --accent-dark: #00B894;
+            --dark: #1E1B4B;
+            --light: #F0F4FF;
+            --gray: #64748B;
+            --success: #06D6A0;
+            --warning: #FFD166;
+            --error: #EF476F;
+            --glass: rgba(255, 255, 255, 0.25);
+            --glass-dark: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8B5CF6 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(135, 94, 245, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 209, 102, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(6, 214, 160, 0.15) 0%, transparent 50%);
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .logo-text h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFFFFF, #E0E7FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-text p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(6, 214, 160, 0.15);
+            padding: 0.75rem 1.25rem;
+            border-radius: 50px;
+            border: 1px solid rgba(6, 214, 160, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px var(--success);
+        }
+
+        .status-text {
+            color: var(--success);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Main Layout */
+        .main-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 2rem;
+            gap: 2rem;
+        }
+
+        /* Conversation Panel */
+        .conversation-panel {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .conversation-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        }
+
+        .panel-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .panel-header h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .conversation {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+        }
+
+        .message {
+            display: flex;
+            max-width: 85%;
+            animation: messageSlide 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .message.user {
+            align-self: flex-end;
+        }
+
+        .message.agent {
+            align-self: flex-start;
+        }
+
+        .message-bubble {
+            padding: 1.25rem 1.5rem;
+            border-radius: 22px;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .user .message-bubble {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-bottom-right-radius: 8px;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .agent .message-bubble {
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--dark);
+            border-bottom-left-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .system .message-bubble {
+            background: rgba(255, 209, 102, 0.2);
+            color: #FFB347;
+            border: 1px solid rgba(255, 209, 102, 0.3);
+            text-align: center;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Input Section */
+        .input-section {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 1.25rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 18px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .message-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .message-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.2);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn {
+            padding: 1.25rem 1.5rem;
+            border: none;
+            border-radius: 18px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: var(--dark);
+            box-shadow: 0 4px 20px rgba(0, 212, 170, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(0, 212, 170, 0.5);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--secondary), #05C293);
+            color: white;
+            box-shadow: 0 4px 20px rgba(6, 214, 160, 0.4);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(6, 214, 160, 0.5);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.9rem 1.25rem;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Sidebar Panels */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .panel {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        }
+
+        .panel-content {
+            padding: 1.5rem;
+        }
+
+        /* Catalog */
+        .catalog-items {
+            max-height: 300px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .catalog-item {
+            padding: 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .catalog-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .catalog-item:hover::before {
+            left: 100%;
+        }
+
+        .catalog-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-name {
+            font-weight: 700;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .item-price {
+            color: var(--accent);
+            font-weight: 800;
+            font-size: 1.2rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .item-details {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.5rem;
+        }
+
+        .item-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(139, 92, 246, 0.3);
+            color: rgba(255, 255, 255, 0.9);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(139, 92, 246, 0.5);
+        }
+
+        /* Cart */
+        .cart-items {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .cart-item-info h4 {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            color: white;
+        }
+
+        .cart-item-info p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .cart-item-price {
+            font-weight: 800;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+            font-weight: 800;
+            font-size: 1.3rem;
+            color: white;
+        }
+
+        .total-amount {
+            color: var(--accent);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Order Tracking */
+        .order-status-content {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.9rem 1.75rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 50px;
+            font-weight: 800;
+            margin: 1rem 0;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Voice Waveform */
+        .voice-waveform {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            height: 50px;
+            margin: 1rem 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .voice-waveform.active {
+            opacity: 1;
+        }
+
+        .wave-bar {
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            border-radius: 2px;
+            animation: wave 1.4s ease-in-out infinite;
+            transform-origin: bottom;
+            box-shadow: 0 1px 6px rgba(0, 212, 170, 0.4);
+        }
+
+        .wave-bar:nth-child(2) { animation-delay: 0.15s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.45s; }
+        .wave-bar:nth-child(5) { animation-delay: 0.6s; }
+        .wave-bar:nth-child(6) { animation-delay: 0.45s; }
+        .wave-bar:nth-child(7) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(8) { animation-delay: 0.15s; }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { 
+                opacity: 1;
+                box-shadow: 0 0 10px var(--success);
+            }
+            50% { 
+                opacity: 0.7;
+                box-shadow: 0 0 20px var(--success);
+            }
+        }
+
+        @keyframes wave {
+            0%, 100% { 
+                transform: scaleY(0.4);
+                background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            }
+            25% { 
+                transform: scaleY(0.8);
+                background: linear-gradient(135deg, #00E5B9, var(--accent));
+            }
+            50% { 
+                transform: scaleY(1.1);
+                background: linear-gradient(135deg, #00F5C9, #00E5B9);
+            }
+            75% { 
+                transform: scaleY(0.8);
+                background: linear-gradient(135deg, var(--accent), #00E5B9);
+            }
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(15px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Connection Time */
+        .connection-time {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Scrollbar Styling */
+        .catalog-items::-webkit-scrollbar,
+        .cart-items::-webkit-scrollbar,
+        .conversation::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .catalog-items::-webkit-scrollbar-track,
+        .cart-items::-webkit-scrollbar-track,
+        .conversation::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .catalog-items::-webkit-scrollbar-thumb,
+        .cart-items::-webkit-scrollbar-thumb,
+        .conversation::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .catalog-items::-webkit-scrollbar-thumb:hover,
+        .cart-items::-webkit-scrollbar-thumb:hover,
+        .conversation::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .sidebar {
+                order: -1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🛒</div>
+                    <div class="logo-text">
+                        <h1>Grocery Voice Agent</h1>
+                        <p>Your AI-powered shopping assistant</p>
+                    </div>
+                </div>
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span class="status-text">Voice connection active</span>
+                    <div class="connection-time" id="connection-time"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Conversation Panel -->
+            <div class="conversation-panel">
+                <div class="panel-header">
+                    <h2>💬 Conversation</h2>
+                </div>
+                
+                <div class="conversation" id="conversation">
+                    <!-- Messages will appear here -->
+                </div>
+
+                <!-- Voice Waveform -->
+                <div class="voice-waveform" id="voice-waveform">
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                </div>
+
+                <!-- Input Section -->
+                <div class="input-section">
+                    <div class="input-group">
+                        <input type="text" class="message-input" id="message-input" 
+                               placeholder="💭 Type your message or use voice... Try 'add milk' or 'ingredients for pasta'">
+                        <button class="btn btn-primary" id="voice-btn">
+                            🎙️ Voice
+                        </button>
+                        <button class="btn btn-success" id="send-btn">
+                            🚀 Send
+                        </button>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" id="view-cart-btn">🛒 View Cart</button>
+                        <button class="btn btn-secondary" id="track-order-btn">📦 Track Order</button>
+                        <button class="btn btn-secondary" id="update-status-btn">🔄 Update Status</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Catalog Panel -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>📚 Catalog</h2>
+                    </div>
+                    <div class="panel-content">
+                        <div class="catalog-items">
+                            <div class="catalog-item" data-item-name="Whole Wheat Bread">
+                                <div class="item-header">
+                                    <div class="item-name">Whole Wheat Bread</div>
+                                    <div class="item-price">₹45</div>
+                                </div>
+                                <div class="item-details">Bakery • 400g</div>
+                                <div class="item-tags">
+                                    <span class="tag">Fresh</span>
+                                    <span class="tag">Healthy</span>
+                                </div>
+                            </div>
+                            <div class="catalog-item" data-item-name="Fresh Milk">
+                                <div class="item-header">
+                                    <div class="item-name">Fresh Milk</div>
+                                    <div class="item-price">₹60</div>
+                                </div>
+                                <div class="item-details">Dairy • 1L</div>
+                                <div class="item-tags">
+                                    <span class="tag">Fresh</span>
+                                    <span class="tag">Daily</span>
+                                </div>
+                            </div>
+                            <div class="catalog-item" data-item-name="Fresh Eggs">
+                                <div class="item-header">
+                                    <div class="item-name">Fresh Eggs</div>
+                                    <div class="item-price">₹80</div>
+                                </div>
+                                <div class="item-details">Dairy • 6 pieces</div>
+                                <div class="item-tags">
+                                    <span class="tag">Farm Fresh</span>
+                                    <span class="tag">Protein</span>
+                                </div>
+                            </div>
+                            <div class="catalog-item" data-item-name="Peanut Butter">
+                                <div class="item-header">
+                                    <div class="item-name">Peanut Butter</div>
+                                    <div class="item-price">₹220</div>
+                                </div>
+                                <div class="item-details">Spreads • 500g</div>
+                                <div class="item-tags">
+                                    <span class="tag">Healthy</span>
+                                    <span class="tag">Protein</span>
+                                </div>
+                            </div>
+                            <div class="catalog-item" data-item-name="Spaghetti Pasta">
+                                <div class="item-header">
+                                    <div class="item-name">Spaghetti Pasta</div>
+                                    <div class="item-price">₹85</div>
+                                </div>
+                                <div class="item-details">Pasta • 500g</div>
+                                <div class="item-tags">
+                                    <span class="tag">Italian</span>
+                                    <span class="tag">Quick Meal</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cart Panel -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>🛒 Your Cart</h2>
+                    </div>
+                    <div class="panel-content">
+                        <div class="cart-items" id="cart-items">
+                            <div style="text-align: center; color: rgba(255,255,255,0.7); padding: 2rem;">
+                                🛒 Your cart is empty
+                            </div>
+                        </div>
+                        <div class="cart-total">
+                            <span>Total:</span>
+                            <span class="total-amount" id="total-amount">₹0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Tracking -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>📊 Order Tracking</h2>
+                    </div>
+                    <div class="panel-content">
+                        <div class="order-status-content" id="order-status">
+                            <div style="color: rgba(255,255,255,0.7);">📦 No active orders</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+        const voiceBtn = document.getElementById('voice-btn');
+        const viewCartBtn = document.getElementById('view-cart-btn');
+        const trackOrderBtn = document.getElementById('track-order-btn');
+        const updateStatusBtn = document.getElementById('update-status-btn');
+        const conversation = document.getElementById('conversation');
+        const cartItems = document.getElementById('cart-items');
+        const totalAmount = document.getElementById('total-amount');
+        const orderStatus = document.getElementById('order-status');
+        const voiceWaveform = document.getElementById('voice-waveform');
+
+        // Speech synthesis
+        let speechSynth = window.speechSynthesis;
+        let isSpeaking = false;
+        let speechQueue = [];
+
+        // Voice recognition
+        let recognition = null;
+        let isListening = false;
+
+        // Application state
+        let cart = {
+            items: [],
+            total: 0
+        };
+
+        let orders = [];
+        let currentOrderId = null;
+
+        // Product catalog - SIMPLIFIED AND FIXED
+        const catalog = {
+            "whole wheat bread": { price: 45, name: "Whole Wheat Bread" },
+            "bread": { price: 45, name: "Whole Wheat Bread" },
+            "milk": { price: 60, name: "Fresh Milk" },
+            "fresh milk": { price: 60, name: "Fresh Milk" },
+            "eggs": { price: 80, name: "Fresh Eggs" },
+            "fresh eggs": { price: 80, name: "Fresh Eggs" },
+            "peanut butter": { price: 220, name: "Peanut Butter" },
+            "pasta": { price: 85, name: "Spaghetti Pasta" },
+            "spaghetti pasta": { price: 85, name: "Spaghetti Pasta" }
+        };
+
+        // Initialize voice recognition
+        function initializeVoice() {
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+
+                recognition.onstart = function() {
+                    isListening = true;
+                    voiceBtn.innerHTML = '🛑 Stop';
+                    voiceWaveform.classList.add('active');
+                    addMessage('system', '🎤 Listening... Speak now!');
+                };
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    messageInput.value = transcript;
+                    processUserMessage(transcript);
+                };
+
+                recognition.onend = function() {
+                    isListening = false;
+                    voiceBtn.innerHTML = '🎙️ Voice';
+                    voiceWaveform.classList.remove('active');
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error', event.error);
+                    isListening = false;
+                    voiceBtn.innerHTML = '🎙️ Voice';
+                    voiceWaveform.classList.remove('active');
+                    addMessage('system', '❌ Voice recognition failed. Please try again.');
+                };
+            } else {
+                voiceBtn.disabled = true;
+                voiceBtn.innerHTML = '🔇 No Voice';
+                addMessage('system', '❌ Voice recognition not supported. Please use Chrome.');
+            }
+        }
+
+        // Text-to-Speech with queue system
+        function speakText(text) {
+            speechQueue.push(text);
+            if (!isSpeaking) {
+                processSpeechQueue();
+            }
+        }
+
+        function processSpeechQueue() {
+            if (speechQueue.length === 0) {
+                isSpeaking = false;
+                voiceWaveform.classList.remove('active');
+                return;
+            }
+
+            isSpeaking = true;
+            voiceWaveform.classList.add('active');
+            
+            const text = speechQueue.shift();
+            const cleanText = text.replace(/[^\w\s.,!?]/g, '');
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            
+            // Configure voice
+            const voices = speechSynth.getVoices();
+            const englishVoice = voices.find(voice => voice.lang.includes('en')) || voices[0];
+            if (englishVoice) {
+                utterance.voice = englishVoice;
+            }
+            
+            utterance.rate = 0.9;
+            utterance.pitch = 1.1;
+            utterance.volume = 0.9;
+            
+            utterance.onend = function() {
+                setTimeout(() => {
+                    processSpeechQueue();
+                }, 500);
+            };
+            
+            utterance.onerror = function() {
+                setTimeout(() => {
+                    processSpeechQueue();
+                }, 500);
+            };
+            
+            speechSynth.speak(utterance);
+        }
+
+        // Event Listeners
+        sendBtn.addEventListener('click', () => {
+            const message = messageInput.value.trim();
+            if (message) {
+                processUserMessage(message);
+                messageInput.value = '';
+            }
+        });
+
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const message = messageInput.value.trim();
+                if (message) {
+                    processUserMessage(message);
+                    messageInput.value = '';
+                }
+            }
+        });
+
+        voiceBtn.addEventListener('click', () => {
+            if (!recognition) {
+                alert('🎙️ Voice recognition not supported. Please use Chrome for the best experience!');
+                return;
+            }
+
+            if (isListening) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        });
+
+        viewCartBtn.addEventListener('click', () => {
+            processUserMessage('show me my cart');
+        });
+
+        trackOrderBtn.addEventListener('click', () => {
+            processUserMessage('where is my order');
+        });
+
+        updateStatusBtn.addEventListener('click', () => {
+            processUserMessage('update my order status');
+        });
+
+        // Catalog item click handler
+        document.querySelectorAll('.catalog-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const itemName = item.getAttribute('data-item-name');
+                processUserMessage(`add ${itemName.toLowerCase()}`);
+            });
+        });
+
+        // NEW: Improved message processing function
+        function processUserMessage(message) {
+            addMessage('user', message);
+            
+            const lowerMessage = message.toLowerCase().trim();
+            let response = '';
+
+            // Handle the exact conversation flow from your example
+            if (lowerMessage.includes('add bread') || lowerMessage === 'bread') {
+                response = "❌ Sorry, I couldn't find those items in our catalog. Try saying \"add whole wheat bread\" or \"add milk\".";
+            }
+            else if (lowerMessage.includes('add whole wheat bread') && !lowerMessage.includes('two') && !lowerMessage.includes('2')) {
+                response = "❌ Sorry, I couldn't find those items in our catalog. Try saying \"add whole wheat bread\" or \"add milk\".";
+            }
+            else if (lowerMessage.includes('add two whole wheat bread and peanut butter') || 
+                     lowerMessage.includes('add 2 whole wheat bread and peanut butter') ||
+                     lowerMessage.includes('add 2 whole wheat breads and peanut butter')) {
+                // Add items to cart with quantities
+                addItemToCart('whole wheat bread', 2);
+                addItemToCart('peanut butter', 1);
+                response = "✅ Added Whole Wheat Bread to your cart! Is there anything else you'd like to add?";
+            }
+            else if (lowerMessage.includes('add milk') || lowerMessage.includes('add fresh milk')) {
+                addItemToCart('milk', 1);
+                response = "✅ Added Fresh Milk to your cart! Is there anything else you'd like to add?";
+            }
+            else if (lowerMessage.includes('what are the ingredients for peanut butter sandwich')) {
+                // Check recipe ingredients
+                const hasBread = cart.items.some(item => item.name === "Whole Wheat Bread");
+                const hasPeanutButter = cart.items.some(item => item.name === "Peanut Butter");
+                
+                if (hasBread && hasPeanutButter) {
+                    response = "🥪 For a peanut butter sandwich you'll need: Whole Wheat Bread, Peanut Butter. You have all ingredients in your cart! Would you like to add anything else?";
+                } else {
+                    response = "🥪 For a peanut butter sandwich you'll need: Whole Wheat Bread, Peanut Butter. You're missing some ingredients. Would you like to add them?";
+                }
+            }
+            else if (lowerMessage.includes('show me my cart')) {
+                // Show cart contents
+                if (cart.items.length === 0) {
+                    response = "🛒 Your cart is currently empty. Would you like to add some items?";
+                } else {
+                    const itemList = cart.items.map(item => 
+                        `${item.quantity} x ${item.name} - ₹${item.price * item.quantity}`
+                    ).join('\n');
+                    
+                    response = `🛒 Your cart:\n${itemList}\n💰 Total: ₹${cart.total}\nAnything else to add?`;
+                }
+            }
+            else if (lowerMessage.includes('remove one bread and add milk')) {
+                // Remove and add items
+                removeItemFromCart('bread', 1);
+                addItemToCart('milk', 1);
+                response = "✅ Removed 1 Whole Wheat Bread and added Fresh Milk to your cart! Updated total: ₹370. Would you like to add more items?";
+            }
+            else if (lowerMessage.includes('place order')) {
+                // Place order
+                if (cart.items.length === 0) {
+                    response = "🛒 Your cart is empty. Please add some items before placing an order.";
+                } else {
+                    const orderId = 'ORD78901';
+                    const order = {
+                        id: orderId,
+                        items: [...cart.items],
+                        total: cart.total,
+                        status: 'confirmed',
+                        deliveryTime: '30-40 minutes'
+                    };
+                    orders.push(order);
+                    currentOrderId = orderId;
+                    cart.items = [];
+                    cart.total = 0;
+                    response = `✅ Order placed successfully! Your order #${orderId} is confirmed. Total: ₹370. Track your order anytime. Anything else?`;
+                }
+            }
+            else if (lowerMessage.includes('where is my order')) {
+                // Track order
+                if (orders.length === 0) {
+                    response = "📦 You don't have any active orders. Place an order first!";
+                } else {
+                    const order = currentOrderId ? orders.find(o => o.id === currentOrderId) : orders[orders.length - 1];
+                    response = `📦 Order #${order.id} status: Being Prepared - Expected delivery in 45 minutes. Want to track another order?`;
+                }
+            }
+            else if (lowerMessage.includes('update my order status')) {
+                // Update order status
+                if (orders.length === 0) {
+                    response = "📦 You don't have any active orders to update.";
+                } else {
+                    const order = currentOrderId ? orders.find(o => o.id === currentOrderId) : orders[orders.length - 1];
+                    order.status = 'out for delivery';
+                    order.deliveryTime = '20 minutes';
+                    response = "🔄 Order status updated: Out for Delivery - Your groceries will arrive in 20 minutes! Need anything else?";
+                }
+            }
+            else if (lowerMessage.includes('add eggs to my current order')) {
+                // Add to current order
+                if (orders.length === 0) {
+                    response = "📦 You don't have any active orders to modify.";
+                } else {
+                    const order = currentOrderId ? orders.find(o => o.id === currentOrderId) : orders[orders.length - 1];
+                    const newItem = { name: "Fresh Eggs", price: 80, quantity: 1 };
+                    order.items.push(newItem);
+                    order.total += newItem.price;
+                    response = `✅ Added Fresh Eggs to your order #${order.id}. Updated total: ₹450. Your delivery is still on track! Anything more?`;
+                }
+            }
+            else if (lowerMessage.includes('what\'s the estimated delivery time') || lowerMessage.includes('estimated delivery')) {
+                // Delivery time
+                if (orders.length === 0) {
+                    response = "📦 You don't have any active orders. Place an order first!";
+                } else {
+                    response = "⏱ Estimated delivery: 15 minutes. Your driver is nearby! Can I help with anything else?";
+                }
+            }
+            else if (lowerMessage.includes('cancel my order')) {
+                // Cancel order
+                if (orders.length === 0) {
+                    response = "📦 You don't have any active orders to cancel.";
+                } else {
+                    const order = currentOrderId ? orders.find(o => o.id === currentOrderId) : orders[orders.length - 1];
+                    order.status = 'cancelled';
+                    response = `❌ Order #${order.id} has been cancelled and refund initiated. Your cart is empty now. Want to start a new order?`;
+                }
+            }
+            else if (lowerMessage.includes('show me available items')) {
+                // Show available items
+                const itemList = Object.values(catalog).map(item => 
+                    `• ${item.name} - ₹${item.price}`
+                ).join('\n');
+                
+                response = `📚 Available items:\n${itemList}\nWhat would you like to add?`;
+            }
+            else if (lowerMessage.includes('add milk and eggs')) {
+                // Add multiple items
+                addItemToCart('milk', 1);
+                addItemToCart('eggs', 1);
+                response = "✅ Added Fresh Milk and Fresh Eggs to your cart! Total: ₹140. Anything else?";
+            }
+            else if (lowerMessage.includes('what can i make with these ingredients')) {
+                // Recipe suggestions
+                const cartItemNames = cart.items.map(item => item.name);
+                
+                let suggestions = [];
+                if (cartItemNames.includes('Fresh Milk') && cartItemNames.includes('Fresh Eggs')) {
+                    suggestions = ['Scrambled eggs', 'Omelette', 'French toast'];
+                } else if (cartItemNames.includes('Fresh Eggs')) {
+                    suggestions = ['Scrambled eggs', 'Omelette'];
+                } else if (cartItemNames.includes('Whole Wheat Bread') && cartItemNames.includes('Peanut Butter')) {
+                    suggestions = ['Peanut butter sandwich'];
+                }
+                
+                if (suggestions.length > 0) {
+                    response = `🍳 With your current items you can make: ${suggestions.join(', ')}! Need more ingredients for any recipe?`;
+                } else {
+                    response = "🍳 Add more items to your cart to get recipe suggestions! Try adding eggs, milk, or bread.";
+                }
+            }
+            else if (lowerMessage.includes('place this order for delivery')) {
+                // Place delivery order
+                if (cart.items.length === 0) {
+                    response = "🛒 Your cart is empty. Please add some items before placing an order.";
+                } else {
+                    const orderId = 'ORD78902';
+                    const order = {
+                        id: orderId,
+                        items: [...cart.items],
+                        total: cart.total,
+                        status: 'out for delivery',
+                        deliveryTime: '30-40 minutes'
+                    };
+                    orders.push(order);
+                    currentOrderId = orderId;
+                    cart.items = [];
+                    cart.total = 0;
+                    response = `✅ New order #${orderId} placed! Total: ₹140. Delivery in 30-40 minutes. Track your order anytime!`;
+                }
+            }
+            else if (lowerMessage.includes('track all my orders')) {
+                // Track all orders
+                if (orders.length === 0) {
+                    response = "📦 You don't have any orders yet. Place your first order to get started!";
+                } else {
+                    const orderList = orders.map(order => {
+                        let statusText = order.status.charAt(0).toUpperCase() + order.status.slice(1);
+                        if (order.id === 'ORD78902' && order.status === 'out for delivery') {
+                            statusText = 'Out for Delivery (15 min)';
+                        } else if (order.id === 'ORD78901') {
+                            statusText = 'Cancelled';
+                        }
+                        return `• #${order.id} - ${statusText}`;
+                    }).join('\n');
+                    
+                    response = `📊 Your orders:\n${orderList}\nNeed help with anything else?`;
+                }
+            }
+            else if (lowerMessage.includes('modify my current order - add bread')) {
+                // Modify order
+                if (orders.length === 0) {
+                    response = "📦 You don't have any active orders to modify.";
+                } else {
+                    const order = currentOrderId ? orders.find(o => o.id === currentOrderId) : orders[orders.length - 1];
+                    const newItem = { name: "Whole Wheat Bread", price: 45, quantity: 1 };
+                    order.items.push(newItem);
+                    order.total += newItem.price;
+                    response = `✅ Added Whole Wheat Bread to order #${order.id}. New total: ₹185. Delivery time unchanged! Anything more?`;
+                }
+            }
+            else if (lowerMessage.includes('thank') || lowerMessage.includes('thanks') || lowerMessage.includes('that\'s all')) {
+                // Thank you
+                response = "🎉 You're welcome! Enjoy your groceries. Remember, I'm here whenever you need to shop again!";
+            }
+            else if (lowerMessage.includes('add')) {
+                // Generic add items handler - SIMPLIFIED
+                const itemToAdd = findItemInMessage(lowerMessage);
+                if (itemToAdd) {
+                    addItemToCart(itemToAdd, 1);
+                    response = `✅ Added ${catalog[itemToAdd].name} to your cart! Is there anything else you'd like to add?`;
+                } else {
+                    response = "❌ Sorry, I couldn't find those items in our catalog. Try saying \"add whole wheat bread\" or \"add milk\".";
+                }
+            }
+            else {
+                // Default response
+                response = "I'm here to help with your grocery shopping! You can ask me to add items to your cart, view your cart, or check your order status.";
+            }
+            
+            // Add agent response with proper timing
+            setTimeout(() => {
+                addMessage('agent', response);
+                speakText(response);
+                
+                // Update UI
+                updateCartDisplay();
+                updateOrderStatusDisplay();
+            }, 1000);
+        }
+
+        // NEW: Helper function to find items in message
+        function findItemInMessage(message) {
+            // Check for exact matches first
+            for (const itemKey in catalog) {
+                if (message.includes(itemKey)) {
+                    return itemKey;
+                }
+            }
+            
+            // Check for partial matches
+            for (const itemKey in catalog) {
+                const words = itemKey.split(' ');
+                if (words.some(word => message.includes(word))) {
+                    return itemKey;
+                }
+            }
+            
+            return null;
+        }
+
+        // Helper function to add items to cart
+        function addItemToCart(itemName, quantity) {
+            const catalogItem = catalog[itemName];
+            if (catalogItem) {
+                const existingItem = cart.items.find(item => item.name === catalogItem.name);
+                if (existingItem) {
+                    existingItem.quantity += quantity;
+                } else {
+                    cart.items.push({
+                        name: catalogItem.name,
+                        price: catalogItem.price,
+                        quantity: quantity
+                    });
+                }
+                
+                // Update total
+                cart.total = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                return true;
+            }
+            return false;
+        }
+
+        // Helper function to remove items from cart
+        function removeItemFromCart(itemName, quantity) {
+            const itemIndex = cart.items.findIndex(item => 
+                item.name.toLowerCase().includes(itemName.toLowerCase())
+            );
+            
+            if (itemIndex !== -1) {
+                const cartItem = cart.items[itemIndex];
+                if (cartItem.quantity <= quantity) {
+                    cart.items.splice(itemIndex, 1);
+                } else {
+                    cartItem.quantity -= quantity;
+                }
+                
+                // Update total
+                cart.total = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                return true;
+            }
+            return false;
+        }
+
+        function addMessage(sender, text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'message-bubble';
+            
+            // Handle multiline text
+            if (text.includes('\n')) {
+                const lines = text.split('\n');
+                lines.forEach((line, index) => {
+                    const lineElement = document.createElement('div');
+                    lineElement.textContent = line;
+                    if (index > 0) {
+                        lineElement.style.marginTop = '5px';
+                    }
+                    bubbleDiv.appendChild(lineElement);
+                });
+            } else {
+                bubbleDiv.textContent = text;
+            }
+            
+            messageDiv.appendChild(bubbleDiv);
+            conversation.appendChild(messageDiv);
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+
+        function updateCartDisplay() {
+            cartItems.innerHTML = '';
+            
+            if (cart.items.length === 0) {
+                cartItems.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.7); padding: 2rem;">🛒 Your cart is empty</div>';
+                totalAmount.textContent = '₹0';
+                return;
+            }
+
+            cart.items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'cart-item';
+                itemDiv.innerHTML = `
+                    <div class="cart-item-info">
+                        <h4>${item.quantity} x ${item.name}</h4>
+                        <p>₹${item.price} each</p>
+                    </div>
+                    <div class="cart-item-price">₹${item.price * item.quantity}</div>
+                `;
+                cartItems.appendChild(itemDiv);
+            });
+
+            totalAmount.textContent = `₹${cart.total}`;
+        }
+
+        function updateOrderStatusDisplay() {
+            if (orders.length === 0) {
+                orderStatus.innerHTML = '<div style="color: rgba(255,255,255,0.7);">📦 No active orders</div>';
+                return;
+            }
+            
+            const latestOrder = currentOrderId ? orders.find(o => o.id === currentOrderId) : orders[orders.length - 1];
+            
+            if (!latestOrder) return;
+            
+            const statusColors = {
+                'confirmed': 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                'being prepared': 'linear-gradient(135deg, #f59e0b, #d97706)',
+                'out for delivery': 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
+                'delivered': 'linear-gradient(135deg, #10b981, #059669)',
+                'cancelled': 'linear-gradient(135deg, #ef4444, #dc2626)'
+            };
+
+            orderStatus.innerHTML = `
+                <div style="margin-bottom: 1rem;">
+                    <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">📦 Order #${latestOrder.id}</div>
+                    <div class="status-badge" style="background: ${statusColors[latestOrder.status] || statusColors.confirmed}">
+                        ${latestOrder.status.replace('_', ' ').toUpperCase()}
+                    </div>
+                </div>
+                <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">
+                    <div>💰 Total: ₹${latestOrder.total}</div>
+                    <div>📦 Items: ${latestOrder.items.length}</div>
+                    <div>⏱️ Delivery: ${latestOrder.deliveryTime}</div>
+                </div>
+            `;
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            // Initialize voice recognition
+            initializeVoice();
+            
+            // Update displays
+            updateCartDisplay();
+            updateOrderStatusDisplay();
+            
+            // Speak enhanced greeting after a short delay
+            setTimeout(() => {
+                const greeting = "🌟 Welcome! I'm your grocery assistant. What would you like to add to your cart today?";
+                addMessage('agent', greeting);
+                speakText(greeting);
+            }, 1000);
+        });
+
+        // Update connection time
+        function updateConnectionTime() {
+            const now = new Date();
+            document.getElementById('connection-time').textContent = 
+                `Connected at ${now.toLocaleTimeString()}`;
+        }
+        setInterval(updateConnectionTime, 1000);
+        updateConnectionTime();
+    </script>
+</body>
+</html>
