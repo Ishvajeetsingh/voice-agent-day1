@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D&D Voice Game Master</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="twinkling"></div>
+    
+    <div class="container">
+        <header class="header">
+            <h1 class="title">
+                <span class="title-icon">⚔️</span>
+                Tales of the Ancient Forest
+                <span class="title-icon">🛡️</span>
+            </h1>
+            <p class="subtitle">A Voice-Powered D&D Adventure</p>
+        </header>
+
+        <div class="main-layout">
+            <!-- Left Sidebar - Character Sheet -->
+            <aside class="character-panel">
+                <div class="panel-header">
+                    <h2>⚔️ Character Sheet</h2>
+                </div>
+                <div class="character-content">
+                    <div class="stat-group">
+                        <div class="stat-label">Name</div>
+                        <div class="stat-value" id="char-name">Adventurer</div>
+                    </div>
+                    <div class="stat-group">
+                        <div class="stat-label">Class</div>
+                        <div class="stat-value" id="char-class">Wanderer</div>
+                    </div>
+                    <div class="stat-group">
+                        <div class="stat-label">Level</div>
+                        <div class="stat-value" id="char-level">1</div>
+                    </div>
+                    <div class="stat-group health-group">
+                        <div class="stat-label">Health</div>
+                        <div class="health-bar">
+                            <div class="health-bar-fill" id="health-bar"></div>
+                            <span class="health-text" id="char-hp">100/100</span>
+                        </div>
+                    </div>
+                    <div class="stat-group">
+                        <div class="stat-label">Status</div>
+                        <div class="stat-value status-healthy" id="char-status">Healthy</div>
+                    </div>
+                    <div class="stat-group">
+                        <div class="stat-label">Gold</div>
+                        <div class="stat-value" id="char-gold">💰 25</div>
+                    </div>
+                    
+                    <div class="inventory-section">
+                        <h3>🎒 Inventory</h3>
+                        <div id="inventory-list" class="inventory-list">
+                            <div class="inventory-item">torch</div>
+                            <div class="inventory-item">waterskin</div>
+                            <div class="inventory-item">rusty dagger</div>
+                        </div>
+                    </div>
+
+                    <div class="quests-section">
+                        <h3>📜 Active Quests</h3>
+                        <div id="quests-list" class="quests-list">
+                            <div class="quest-item">
+                                <div class="quest-name">Investigate the Forest</div>
+                                <div class="quest-progress">0/2 objectives</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Game Area -->
+            <main class="game-area">
+                <div class="story-container" id="story-container">
+                    <div class="welcome-screen" id="welcome-screen">
+                        <div class="welcome-content">
+                            <div class="welcome-icon">🐉</div>
+                            <h2>Welcome, Brave Adventurer!</h2>
+                            <p>Prepare yourself for an epic journey through the Ancient Forest. Dark mysteries await, and your choices will shape your destiny.</p>
+                            <button class="btn btn-primary btn-large" id="start-btn">
+                                <span>🎮</span> Begin Adventure
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-area" id="input-area" style="display: none;">
+                    <div class="input-container">
+                        <button class="btn btn-voice" id="voice-btn" title="Hold to speak">
+                            <span class="voice-icon">🎤</span>
+                            <span class="voice-text">Hold to Speak</span>
+                        </button>
+                        <div class="input-divider">
+                            <span>or</span>
+                        </div>
+                        <div class="text-input-group">
+                            <input 
+                                type="text" 
+                                id="text-input" 
+                                placeholder="Type your action..."
+                                class="text-input"
+                            >
+                            <button class="btn btn-send" id="send-btn">
+                                <span>⚡</span> Send
+                            </button>
+                        </div>
+                    </div>
+                    <div class="controls">
+                        <button class="btn btn-secondary btn-small" id="restart-btn">
+                            <span>🔄</span> Restart Adventure
+                        </button>
+                        <button class="btn btn-secondary btn-small" id="mute-btn">
+                            <span id="mute-icon">🔊</span> <span id="mute-text">Mute Voice</span>
+                        </button>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Right Sidebar - World Info -->
+            <aside class="world-panel">
+                <div class="panel-header">
+                    <h2>🌍 World Info</h2>
+                </div>
+                <div class="world-content">
+                    <div class="info-group">
+                        <div class="info-label">📍 Location</div>
+                        <div class="info-value" id="location-name">Ancient Forest Entrance</div>
+                        <div class="info-description" id="location-desc">A misty forest with towering trees and mysterious sounds</div>
+                    </div>
+                    
+                    <div class="info-group">
+                        <div class="info-label">🌤️ Time</div>
+                        <div class="info-value" id="world-time">Dusk</div>
+                    </div>
+                    
+                    <div class="info-group">
+                        <div class="info-label">🌧️ Weather</div>
+                        <div class="info-value" id="world-weather">Misty</div>
+                    </div>
+                    
+                    <div class="info-group">
+                        <div class="info-label">⚠️ Danger Level</div>
+                        <div class="info-value danger-moderate" id="danger-level">Moderate</div>
+                    </div>
+
+                    <div class="events-section">
+                        <h3>📖 Recent Events</h3>
+                        <div id="events-list" class="events-list">
+                            <div class="event-item">Adventure begins at the Ancient Forest entrance</div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
