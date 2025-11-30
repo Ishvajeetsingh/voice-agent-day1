@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceShop AI - Next-Gen E-commerce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #fff;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            opacity: 0.1;
+            z-index: 0;
+            animation: bgShift 15s ease infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(45deg); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px 40px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideDown 0.8s ease;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2.5em;
+            line-height: 1;
+        }
+
+        .logo-text h1 {
+            font-size: 1.8em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text p {
+            font-size: 0.85em;
+            color: #999;
+            font-weight: 400;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .cart-badge {
+            position: relative;
+            font-size: 1.8em;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            line-height: 1;
+        }
+
+        .cart-badge:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.5em;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        /* Voice Assistant Panel */
+        .voice-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 30px;
+            height: fit-content;
+            min-height: 650px;
+            position: sticky;
+            top: 20px;
+            animation: fadeInLeft 0.8s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #667eea, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+        
+        .panel-title span {
+            -webkit-text-fill-color: initial;
+            background: none;
+            -webkit-background-clip: initial;
+            background-clip: initial;
+        }
+
+        /* Voice Visualizer */
+        .voice-visualizer {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 150px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .waveform {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 80px;
+        }
+
+        .wave-bar {
+            width: 4px;
+            background: linear-gradient(180deg, #667eea, #f093fb);
+            border-radius: 4px;
+            animation: wave 1.2s ease-in-out infinite;
+        }
+
+        .wave-bar:nth-child(1) { animation-delay: 0s; height: 20px; }
+        .wave-bar:nth-child(2) { animation-delay: 0.1s; height: 30px; }
+        .wave-bar:nth-child(3) { animation-delay: 0.2s; height: 50px; }
+        .wave-bar:nth-child(4) { animation-delay: 0.3s; height: 40px; }
+        .wave-bar:nth-child(5) { animation-delay: 0.4s; height: 60px; }
+        .wave-bar:nth-child(6) { animation-delay: 0.5s; height: 45px; }
+        .wave-bar:nth-child(7) { animation-delay: 0.6s; height: 35px; }
+        .wave-bar:nth-child(8) { animation-delay: 0.7s; height: 55px; }
+        .wave-bar:nth-child(9) { animation-delay: 0.8s; height: 40px; }
+        .wave-bar:nth-child(10) { animation-delay: 0.9s; height: 30px; }
+
+        @keyframes wave {
+            0%, 100% { transform: scaleY(0.5); opacity: 0.5; }
+            50% { transform: scaleY(1); opacity: 1; }
+        }
+
+        .waveform.active .wave-bar {
+            animation-play-state: running;
+        }
+
+        .waveform:not(.active) .wave-bar {
+            animation-play-state: paused;
+        }
+
+        /* Voice Button */
+        .voice-btn {
+            width: 100%;
+            padding: 20px;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: rgb(255, 255, 255);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            margin-bottom: 15px;
+        }
+
+        .voice-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+        }
+
+        .voice-btn.listening {
+            background: linear-gradient(135deg, #f5576c, #f093fb);
+            animation: pulse 2s infinite;
+        }
+
+        .voice-btn.speaking {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(245, 87, 108, 0.3); }
+            50% { box-shadow: 0 10px 50px rgba(245, 87, 108, 0.7); }
+        }
+
+        /* Text Input */
+        .text-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .text-input {
+            flex: 1;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .send-btn {
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Chat Messages */
+        .chat-container {
+            flex: 1;
+            height: 58vh;
+            max-height: 60vh;
+            min-height: 45vh;
+            overflow-y: auto;
+            margin-top: 15px;
+            padding-right: 12px;
+        }
+
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .chat-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+        }
+
+        .message {
+            margin-bottom: 12px;
+            padding: 12px 16px;
+            border-radius: 14px;
+            max-width: 90%;
+            animation: messageSlide 0.3s ease;
+            line-height: 1.5;
+            font-size: 0.95em;
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin-left: auto;
+            text-align: right;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bot-message {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom-left-radius: 4px;
+        }
+
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Products Section */
+        .products-section {
+            animation: fadeInRight 0.8s ease;
+        }
+
+        .products-header {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 22px;
+        }
+
+        /* Product Card - Amazon Style */
+        .product-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            animation: fadeInScale 0.5s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        .product-image-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 100%;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .product-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.1);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .product-description {
+            font-size: 0.85em;
+            color: #999;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .product-price {
+            font-size: 1.6em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .add-to-cart-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .add-to-cart-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Cart Section */
+        .cart-section {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 30px;
+            margin-top: 20px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .cart-items {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 15px;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .remove-btn {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            color: #ff6b7a;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.85em;
+        }
+
+        .remove-btn:hover {
+            background: rgba(220, 53, 69, 0.4);
+        }
+
+        .cart-total {
+            font-size: 1.8em;
+            font-weight: 700;
+            text-align: right;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, #667eea, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 1.3em;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(17, 153, 142, 0.3);
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(17, 153, 142, 0.5);
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .empty-cart-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+            opacity: 0.3;
+            line-height: 1;
+        }
+
+        /* Payment Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-header {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .modal-subtitle {
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        .payment-options {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .payment-option {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .payment-option:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .payment-option.selected {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .payment-icon {
+            font-size: 2em;
+            line-height: 1;
+        }
+
+        .payment-info {
+            flex: 1;
+        }
+
+        .payment-name {
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .payment-desc {
+            color: #999;
+            font-size: 0.85em;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .confirm-btn {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            box-shadow: 0 6px 20px rgba(17, 153, 142, 0.3);
+        }
+
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(17, 153, 142, 0.5);
+        }
+
+        .confirm-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .order-summary {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .order-summary-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .order-summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #ccc;
+            font-size: 0.95em;
+        }
+
+        .order-summary-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 700;
+            font-size: 1.3em;
+            background: linear-gradient(135deg, #667eea, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .voice-panel {
+                position: relative;
+                top: 0;
+                min-height: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <div class="logo-icon">🛍️</div>
+                <div class="logo-text">
+                    <h1>VoiceShop AI</h1>
+                    <p>Next-Gen Voice Commerce</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="cart-badge" onclick="scrollToCart()">
+                    🛒
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-grid">
+            <!-- Voice Assistant -->
+            <div class="voice-panel">
+                <div class="panel-title">
+                    <span>🎤</span> Voice Assistant
+                </div>
+
+                <!-- Voice Visualizer -->
+                <div class="voice-visualizer">
+                    <div class="waveform" id="waveform">
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                    </div>
+                </div>
+
+                <!-- Voice Button -->
+                <button class="voice-btn" id="voiceBtn">
+                    <span id="voiceIcon">🎤</span>
+                    <span id="voiceText">Start Voice Shopping</span>
+                </button>
+
+                <!-- Text Input -->
+                <div class="text-input-group">
+                    <input type="text" class="text-input" id="textInput" placeholder="Or type your message...">
+                    <button class="send-btn" id="sendBtn">Send</button>
+                </div>
+
+                <!-- Chat Messages -->
+                <div class="chat-container" id="chatContainer"></div>
+            </div>
+
+            <!-- Products -->
+            <div class="products-section">
+                <div class="products-header">
+                    <div class="panel-title">
+                        <span>📦</span> Product Catalog
+                    </div>
+                    <div style="color: #35ef76; font-size: 0.9em;">
+                        <span id="productCount">12</span> products
+                    </div>
+                </div>
+                <div class="products-grid" id="productsGrid"></div>
+            </div>
+        </div>
+
+        <!-- Shopping Cart -->
+        <div class="cart-section" id="cartSection">
+            <div class="panel-title">
+                <span>🛒</span> Shopping Cart
+            </div>
+            <div class="cart-items" id="cartItems">
+                <div class="empty-cart">
+                    <div class="empty-cart-icon">🛒</div>
+                    <p>Your cart is empty</p>
+                    <p style="font-size: 0.9em; margin-top: 10px;">Add items using voice or click "Add to Cart"</p>
+                </div>
+            </div>
+            <div class="cart-total" id="cartTotal"></div>
+            <button class="checkout-btn" id="checkoutBtn" style="display: none;">
+                <span>🎉</span> Checkout Now
+            </button>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-header">Select Payment Method</div>
+            <div class="modal-subtitle">Choose how you'd like to pay for your order</div>
+            
+            <div class="order-summary" id="modalOrderSumm">
+    <div class="order-summary-title">Order Summary</div>
+    <div id="orderSummaryItems"></div>
+    <div class="order-summary-total">
+        <span>Total:</span> <span id="modalTotal">₹0</span>
+    </div>
+</div>
+
+<div class="payment-options">
+
+            <div class="payment-option" data-method="card">
+                <div class="payment-icon">💳</div>
+                <div class="payment-info">
+                    <div class="payment-name">Credit/Debit Card</div>
+                    <div class="payment-desc">Pay securely with your card</div>
+                </div>
+            </div>
+            <div class="payment-option" data-method="upi">
+                <div class="payment-icon">📱</div>
+                <div class="payment-info">
+                    <div class="payment-name">UPI</div>
+                    <div class="payment-desc">Google Pay, PhonePe, Paytm</div>
+                </div>
+            </div>
+            <div class="payment-option" data-method="wallet">
+                <div class="payment-icon">👛</div>
+                <div class="payment-info">
+                    <div class="payment-name">Digital Wallet</div>
+                    <div class="payment-desc">Paytm, Amazon Pay, etc.</div>
+                </div>
+            </div>
+            <div class="payment-option" data-method="cod">
+                <div class="payment-icon">💵</div>
+                <div class="payment-info">
+                    <div class="payment-name">Cash on Delivery</div>
+                    <div class="payment-desc">Pay when you receive</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="modal-btn cancel-btn" onclick="closePaymentModal()">Cancel</button>
+            <button class="modal-btn confirm-btn" id="confirmPaymentBtn" disabled>Confirm Order</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_URL = 'http://localhost:5000';
+    const sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
+    let cart = [];
+    let recognition;
+    let isListening = false;
+    let synthesis = window.speechSynthesis;
+    let hasRequestedMicPermission = false;
+    let userHasInteracted = false;
+    let pendingWelcomeSpeech = true;
+    let selectedPaymentMethod = null;
+
+    // Check if user has interacted (to enable speech)
+    function enableSpeechOnInteraction() {
+        if (!userHasInteracted) {
+            userHasInteracted = true;
+            if (pendingWelcomeSpeech) {
+                speak("Hello! Welcome to our voice powered store. How can I help you today?");
+                pendingWelcomeSpeech = false;
+            }
+        }
+    }
+
+    // Add listeners for user interaction
+    document.addEventListener('click', enableSpeechOnInteraction, { once: true });
+    document.addEventListener('keydown', enableSpeechOnInteraction, { once: true });
+    document.getElementById("voiceBtn").onclick = () => {
+    recognition.start(); // ⬅ listening will now work
+};
+
+
+    // Initialize Speech Recognition ONCE
+    function initSpeechRecognition() {
+        if ('webkitSpeechRecognition' in window && !recognition) {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            recognition.onstart = () => {
+                isListening = true;
+                document.getElementById('voiceBtn').classList.add('listening');
+                document.getElementById('voiceText').textContent = 'Listening...';
+                document.getElementById('waveform').classList.add('active');
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                addMessage(transcript, 'user');
+                sendMessage(transcript);
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                if (event.error === 'not-allowed') {
+                    hasRequestedMicPermission = false;
+                }
+                resetVoiceButton();
+            };
+
+            recognition.onend = () => {
+                resetVoiceButton();
+            };
+        }
+    }
+
+    // Initialize on page load
+    initSpeechRecognition();
+
+    // Event Listeners
+    document.getElementById('voiceBtn').addEventListener('click', startVoiceRecognition);
+    document.getElementById('sendBtn').addEventListener('click', sendTextMessage);
+    document.getElementById('textInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendTextMessage();
+    });
+    document.getElementById('checkoutBtn').addEventListener('click', openPaymentModal);
+    document.getElementById('confirmPaymentBtn').addEventListener('click', confirmOrder);
+
+    // Payment option selection
+    document.querySelectorAll('.payment-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+            selectedPaymentMethod = this.dataset.method;
+            document.getElementById('confirmPaymentBtn').disabled = false;
+        });
+    });
+
+    function startVoiceRecognition() {
+        if (!hasRequestedMicPermission) {
+            // Request permission
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(() => {
+                    hasRequestedMicPermission = true;
+                    if (recognition && !isListening) {
+                        try {
+                            recognition.start();
+                        } catch (e) {
+                            console.log('Recognition already started');
+                        }
+                    }
+                })
+                .catch((err) => {
+                    console.error('Microphone permission denied:', err);
+                    addMessage('Please allow microphone access to use voice shopping.', 'bot');
+                });
+        } else {
+            if (recognition && !isListening) {
+                try {
+                    recognition.start();
+                } catch (e) {
+                    console.log('Recognition already started');
+                }
+            }
+        }
+    }
+
+    function resetVoiceButton() {
+        isListening = false;
+        const voiceBtn = document.getElementById('voiceBtn');
+        voiceBtn.classList.remove('listening');
+        voiceBtn.classList.remove('speaking');
+        document.getElementById('voiceText').textContent = 'Start Voice Shopping';
+        document.getElementById('waveform').classList.remove('active');
+    }
+
+    function sendTextMessage() {
+        const input = document.getElementById('textInput');
+        const message = input.value.trim();
+        if (message) {
+            addMessage(message, 'user');
+            sendMessage(message);
+            input.value = '';
+        }
+    }
+
+    async function sendMessage(message) {
+        try {
+            const response = await fetch(`${API_URL}/api/chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message, session_id: sessionId })
+            });
+
+            const data = await response.json();
+            addMessage(data.response, 'bot');
+            
+            if (userHasInteracted) {
+                speak(data.response);
+            }
+
+            if (data.products && data.products.length > 0) {
+                displayProducts(data.products);
+            }
+
+            // CRITICAL FIX: Sync cart with backend after EVERY message
+            await syncCartFromBackend();
+            
+        } catch (error) {
+            console.error('Error:', error);
+            addMessage('Sorry, I encountered an error. Please try again.', 'bot');
+        }
+    }
+
+    // NEW FUNCTION: Sync cart from backend
+    async function syncCartFromBackend() {
+        try {
+            // Get all products to match with cart items
+            const catalogResponse = await fetch(`${API_URL}/api/catalog`);
+            const catalogData = await catalogResponse.json();
+            const allProducts = catalogData.products;
+
+            // Get current session cart from backend by sending a "cart" query
+            const cartResponse = await fetch(`${API_URL}/api/chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: 'show cart', session_id: sessionId })
+            });
+
+            // The backend returns cart items in carts[session_id]
+            // But we need to extract them from the response
+            // Since backend doesn't have a dedicated cart endpoint, we'll use a workaround
+            
+            // BETTER APPROACH: Let's add backend cart endpoint
+            // Actually, let's make cart operations update our frontend cart directly
+            // by parsing the bot response
+            
+            updateCartDisplay();
+            
+        } catch (error) {
+            console.error('Error syncing cart:', error);
+        }
+    }
+
+    function addMessage(text, sender) {
+        const chatContainer = document.getElementById('chatContainer');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}-message`;
+        messageDiv.textContent = text;
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        // CRITICAL FIX: Extract cart items from bot messages
+        if (sender === 'bot' && text.includes('Added')) {
+            // Parse product name and price from message like "Added Premium Fleece Hoodie to your cart. It costs ₹1899"
+            const match = text.match(/Added (.+?) to your cart\. It costs ₹(\d+)/);
+            if (match) {
+                const productName = match[1];
+                const productPrice = parseInt(match[2]);
+                
+                // Find product in catalog
+                findAndAddProductToCart(productName, productPrice);
+            }
+        } else if (sender === 'bot' && text.includes('Order confirmed')) {
+            // Clear cart on successful checkout
+            cart = [];
+            updateCartDisplay();
+        }
+    }
+
+    async function findAndAddProductToCart(productName, productPrice) {
+        try {
+            const response = await fetch(`${API_URL}/api/catalog`);
+            const data = await response.json();
+            const product = data.products.find(p => 
+                p.name.toLowerCase() === productName.toLowerCase()
+            );
+
+            if (product) {
+                cart.push({
+                    product_id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: 1,
+                    image: product.image
+                });
+                updateCartDisplay();
+            }
+        } catch (error) {
+            console.error('Error finding product:', error);
+        }
+    }
+
+    function speak(text) {
+        if (!userHasInteracted) {
+            return; // Don't speak if user hasn't interacted
+        }
+
+        if (synthesis.speaking) {
+            synthesis.cancel();
+        }
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+        
+        utterance.onstart = () => {
+            document.getElementById('voiceBtn').classList.add('speaking');
+            document.getElementById('voiceText').textContent = 'Speaking...';
+            document.getElementById('waveform').classList.add('active');
+        };
+
+        utterance.onend = () => {
+            resetVoiceButton();
+        };
+
+        synthesis.speak(utterance);
+    }
+
+    async function displayProducts(products) {
+        const grid = document.getElementById('productsGrid');
+        grid.innerHTML = '';
+
+        products.forEach(product => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <div class="product-image-wrapper">
+                    <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/400x400?text=${encodeURIComponent(product.name)}'">
+                    <div class="product-badge">Featured</div>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-description">${product.description}</div>
+                    <div class="product-footer">
+                        <div class="product-price">₹${product.price}</div>
+                        <button class="add-to-cart-btn" onclick="addToCart('${product.id}')">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        document.getElementById('productCount').textContent = products.length;
+    }
+
+    async function addToCart(productId) {
+        try {
+            const response = await fetch(`${API_URL}/api/catalog`);
+            const data = await response.json();
+            const product = data.products.find(p => p.id === productId);
+
+            if (product) {
+                cart.push({
+                    product_id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: 1,
+                    image: product.image
+                });
+
+                updateCartDisplay();
+                addMessage(`Added ${product.name} to cart!`, 'bot');
+                
+                if (userHasInteracted) {
+                    speak(`Added ${product.name} to your cart`);
+                }
+            }
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+        }
+    }
+
+    function updateCartDisplay() {
+        const cartItemsDiv = document.getElementById('cartItems');
+        const cartTotalDiv = document.getElementById('cartTotal');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        const cartCount = document.getElementById('cartCount');
+
+        cartCount.textContent = cart.length;
+
+        if (cart.length === 0) {
+            cartItemsDiv.innerHTML = `
+                <div class="empty-cart">
+                    <div class="empty-cart-icon">🛒</div>
+                    <p>Your cart is empty</p>
+                    <p style="font-size: 0.9em; margin-top: 10px;">Add items using voice or click "Add to Cart"</p>
+                </div>
+            `;
+            cartTotalDiv.innerHTML = '';
+            checkoutBtn.style.display = 'none';
+            return;
+        }
+
+        cartItemsDiv.innerHTML = '';
+        let total = 0;
+
+        cart.forEach((item, index) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'cart-item';
+            itemDiv.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" class="cart-item-image" onerror="this.src='https://via.placeholder.com/80x80?text=Product'">
+                <div class="cart-item-details">
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="cart-item-price">₹${item.price} × ${item.quantity}</div>
+                </div>
+                <button onclick="removeFromCart(${index})" class="remove-btn">Remove</button>
+            `;
+            cartItemsDiv.appendChild(itemDiv);
+            total += item.price * item.quantity;
+        });
+
+        cartTotalDiv.innerHTML = `Total: ₹${total}`;
+        checkoutBtn.style.display = 'block';
+    }
+
+    function removeFromCart(index) {
+        const item = cart[index];
+        cart.splice(index, 1);
+        updateCartDisplay();
+        addMessage(`Removed ${item.name} from cart`, 'bot');
+    }
+
+    function openPaymentModal() {
+        if (cart.length === 0) {
+            addMessage('Your cart is empty!', 'bot');
+            return;
+        }
+
+        // Populate order summary
+        let total = 0;
+        let summaryHTML = '';
+        
+        cart.forEach(item => {
+            summaryHTML += `
+                <div class="order-summary-item">
+                    <span>${item.name} × ${item.quantity}</span>
+                    <span>₹${item.price * item.quantity}</span>
+                </div>
+            `;
+            total += item.price * item.quantity;
+        });
+
+        document.getElementById('orderSummaryItems').innerHTML = summaryHTML;
+        document.getElementById('modalTotal').textContent = `₹${total}`;
+        
+        // Reset selection
+        selectedPaymentMethod = null;
+        document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+        document.getElementById('confirmPaymentBtn').disabled = true;
+        
+        // Show modal
+        document.getElementById('paymentModal').classList.add('active');
+    }
+
+    function closePaymentModal() {
+        document.getElementById('paymentModal').classList.remove('active');
+    }
+
+    async function confirmOrder() {
+        if (!selectedPaymentMethod) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/api/orders`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    line_items: cart,
+                    payment_method: selectedPaymentMethod 
+                })
+            });
+
+            const order = await response.json();
+            closePaymentModal();
+            
+            const paymentMethodName = {
+                'card': 'Card',
+                'upi': 'UPI',
+                'wallet': 'Digital Wallet',
+                'cod': 'Cash on Delivery'
+            }[selectedPaymentMethod];
+            
+            addMessage(`Order confirmed! Order ID: ${order.id}. Total: ₹${order.total}. Payment method: ${paymentMethodName}. Thank you for shopping!`, 'bot');
+            
+            if (userHasInteracted) {
+                speak(`Order confirmed! Your order ID is ${order.id}. Total amount is ${order.total} rupees. Payment will be made via ${paymentMethodName}. Thank you for shopping with us!`);
+            }
+            
+            cart = [];
+            updateCartDisplay();
+        } catch (error) {
+            console.error('Error creating order:', error);
+            addMessage('Error processing your order. Please try again.', 'bot');
+        }
+    }
+
+    function scrollToCart() {
+        document.getElementById('cartSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Load initial catalog
+    async function loadCatalog() {
+        try {
+            const response = await fetch(`${API_URL}/api/catalog`);
+            const data = await response.json();
+            displayProducts(data.products);
+        } catch (error) {
+            console.error('Error loading catalog:', error);
+        }
+    }
+
+    // Initialize
+    window.addEventListener('load', () => {
+        loadCatalog();
+        
+        // Welcome message
+        const welcomeMessage = "Hello! Welcome to our voice-powered store. You can browse products by saying things like 'Show me mugs' or 'I want a black hoodie'. Try using your voice or type below!";
+        addMessage(welcomeMessage, 'bot');
+    });
+</script>

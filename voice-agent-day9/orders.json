@@ -1,0 +1,25 @@
+[
+  {
+    "id": "b0fcaeee",
+    "items": [
+      {
+        "product_id": "tshirt-001",
+        "name": "Cotton T-Shirt",
+        "price": 599,
+        "quantity": 1,
+        "image": "https://www.thestiffcollar.com/cdn/shop/files/03.jpg?v=1683199859&width=1300"
+      },
+      {
+        "product_id": "mug-002",
+        "name": "Stoneware Coffee Mug",
+        "price": 899,
+        "quantity": 1,
+        "image": "https://earthan.in/cdn/shop/products/02YellowBlueCeramicCup1.jpg?v=1744113802"
+      }
+    ],
+    "total": 1498,
+    "currency": "INR",
+    "status": "CONFIRMED",
+    "created_at": "2025-11-30T18:43:42.483158"
+  }
+]
