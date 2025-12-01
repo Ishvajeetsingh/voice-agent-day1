@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IMPROV BATTLE — Voice Game Show</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- HEADER -->
+    <header class="header">
+      <h1>IMPROV BATTLE</h1>
+      <p class="sub">A Short-Form Voice Improv Show — Play Solo. Powered By Web Speech API.</p>
+    </header>
+
+    <main class="card">
+
+      <!-- LEFT PANEL -->
+      <div class="column left">
+
+        <!-- JOIN PANEL -->
+        <div class="join-panel">
+          <label>Contestant Name</label>
+          <input id="name" placeholder="Your Name (e.g., Ishvajeet)" />
+
+          <label>Rounds</label>
+          <select id="max_rounds">
+            <option value="3" selected>3 Rounds</option>
+            <option value="4">4 Rounds</option>
+            <option value="5">5 Rounds</option>
+          </select>
+
+          <button id="start-btn" class="primary">Start Improv Battle</button>
+          <button id="stop-btn" class="ghost" style="display:none">Stop Game</button>
+        </div>
+
+        <!-- HOST PANEL -->
+        <div id="host-box" class="host-box hidden">
+
+          <div id="host-greeting" class="host-greeting"></div>
+
+          <!-- ⭐ WAVEFORM (now always in HTML, always visible) ⭐ -->
+          <div class="waveform" id="waveform">
+            <div></div><div></div><div></div><div></div><div></div>
+          </div>
+
+          <div id="scenario-area" class="scenario-area"></div>
+
+          <div class="controls">
+            <button id="listen-btn" class="primary">Listen / Start Scene</button>
+            <button id="end-scene-btn" class="ghost">End Scene</button>
+            <button id="skip-btn" class="ghost">Skip Scenario</button>
+          </div>
+
+          <div id="transcript" class="transcript"></div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <aside class="column right">
+        <div class="scoreboard card-mini">
+          <h3>Scoreboard</h3>
+          <div id="score-list" class="score-list">
+            <p class="muted">No Rounds Yet — Start The Show.</p>
+          </div>
+          <hr/>
+
+          <h4>Session Summary</h4>
+          <div id="summary" class="summary muted">—</div>
+
+          <div class="save-row">
+            <button id="save-btn" class="primary">Save Session</button>
+            <span id="session-id" class="muted small"></span>
+          </div>
+        </div>
+
+        <div class="help card-mini">
+          <h4>How To Play</h4>
+          <ol>
+            <li>Enter Your Name → Start Improv Battle.</li>
+            <li>Host Reads Scenario — Click "Listen" And Speak Into Your Mic.</li>
+            <li>Say "End Scene" Or Click "End Scene" When Done.</li>
+            <li>Host Reacts And Stores Round Notes In Scoreboard.</li>
+            <li>When Rounds Finish, Host Gives A Summary.</li>
+          </ol>
+        </div>
+      </aside>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <small class="footer-text">
+        Built For Day 10 — IMPROV BATTLE • Uses Web Speech API • UI Split Across Files
+      </small>
+    </footer>
+
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

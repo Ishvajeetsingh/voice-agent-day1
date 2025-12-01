@@ -1,0 +1,290 @@
+/* ============================================================
+   CYBERPUNK NEON ARENA — CLEAN FINAL VERSION
+   includes:
+   ✔ dropdown fix
+   ✔ floating particles
+   ✔ hologram grid
+   ✔ waveform
+   ✔ neon cursor trail
+   ✔ sliding text glow
+   ✔ PINK SCANNING BAR behind IMPROV BATTLE
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;600;700;800&display=swap');
+
+:root{
+  --bg1:#121033;
+  --bg2:#19164f;
+  --bg3:#241b75;
+
+  --neon-cyan:#34f9ff;
+  --neon-purple:#cc45ff;
+
+  --panel-bg: rgba(255,255,255,0.12);
+  --panel-border: rgba(0,255,255,0.22);
+  --text-main: #eaf4ff;
+  --muted: #bcd3ff;
+}
+
+/* ================= GLOBAL ==================== */
+*{
+  box-sizing:border-box;
+  font-family:'Orbitron',sans-serif !important;
+}
+
+html,body{
+  height:100%;
+}
+
+body{
+  margin:0;
+  padding:36px;
+  display:flex;
+  justify-content:center;
+  background:
+    radial-gradient(circle at 30% 20%, var(--bg1), var(--bg2), var(--bg3));
+  background-size:180% 180%;
+  animation:bgShift 14s ease-in-out infinite alternate;
+  color:var(--text-main);
+}
+
+@keyframes bgShift{
+  0%{background-position:0% 30%}
+  100%{background-position:100% 70%}
+}
+
+.app{
+  width:1180px;
+  max-width:96vw;
+  position:relative;
+  z-index:3;
+}
+
+/* ================= PARTICLES ==================== */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  opacity:0.7;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(52,249,255,0.08) 0 2px, transparent 3px),
+    radial-gradient(circle at 25% 70%, rgba(204,69,255,0.06) 0 2px, transparent 3px),
+    radial-gradient(circle at 40% 40%, rgba(79,163,255,0.05) 0 2px, transparent 3px);
+  animation:particleDrift 18s linear infinite;
+  filter:blur(.6px);
+}
+
+@keyframes particleDrift{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-20px)}
+  100%{transform:translateY(0)}
+}
+
+/* ================= HOLOGRAM GRID ==================== */
+.app::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:1;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 40px);
+  mix-blend-mode:overlay;
+  opacity:0.06;
+}
+
+/* ================= HEADER ==================== */
+.header{
+  position:relative;
+  margin-bottom:20px;
+}
+
+/* --- PINK SCANNING BAR BEHIND TITLE --- */
+.header::before{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:-60%;
+  width:180%;
+  height:70px;
+  transform:translateY(-50%);
+  background:linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,90,220,0.55),
+    rgba(255,130,255,0.75),
+    rgba(255,90,220,0.55),
+    transparent
+  );
+  filter:blur(22px);
+  border-radius:20px;
+  opacity:0.55;
+  z-index:1;
+  animation:titleBarSweep 6s infinite ease-in-out;
+}
+
+@keyframes titleBarSweep{
+  0%{left:-70%;opacity:0}
+  10%{opacity:0.55}
+  40%{left:10%;opacity:0.7}
+  70%{left:60%;opacity:0.5}
+  90%{left:120%;opacity:0}
+  100%{left:-70%;opacity:0}
+}
+
+/* --- TITLE TEXT with SLIDING NEON GLOW --- */
+.header h1{
+  position:relative;
+  z-index:2;
+  font-size:62px;
+  margin:0;
+  letter-spacing:20px;
+  text-align:center;
+
+  background:linear-gradient(
+    90deg,
+    #ffffff,
+    #34f9ff,
+    #cc45ff,
+    #34f9ff,
+    #ffffff
+  );
+  background-size:400%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:glowSlide 4.5s infinite linear;
+}
+
+@keyframes glowSlide{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+.sub{
+  text-align:center;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+/* ================= LAYOUT ==================== */
+.card{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:26px;
+}
+
+/* ================= PANELS ==================== */
+.column{
+  background:var(--panel-bg);
+  border:1px solid var(--panel-border);
+  border-radius:18px;
+  padding:26px;
+  backdrop-filter:blur(14px);
+  position:relative;
+}
+
+/* ================= INPUTS ==================== */
+label{margin-top:8px;display:block;color:var(--text-main);font-size:14px}
+
+input,select{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.10);
+  border:1px solid rgba(255,255,255,0.12);
+  color:var(--text-main);
+}
+
+/* dropdown arrow fix */
+select{
+  appearance:none;
+  padding-right:44px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'><polyline points='6 9 12 15 18 9' fill='none' stroke='%2334f9ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat:no-repeat;
+  background-position:right 14px center;
+}
+
+/* ================= BUTTONS ==================== */
+button{
+  cursor:pointer;
+  border-radius:12px;
+  padding:12px 18px;
+  text-transform:uppercase;
+  font-weight:700;
+  border:none;
+}
+
+button.primary{
+  background:linear-gradient(90deg,var(--neon-cyan),var(--neon-purple));
+  color:#001018;
+}
+
+button.ghost{
+  background:rgba(255,255,255,0.06);
+  color:var(--muted);
+}
+
+/* ================= HOST BOX & WAVEFORM ==================== */
+.host-box{
+  background:rgba(255,255,255,0.06);
+  padding:18px;
+  border-radius:12px;
+  margin-top:18px;
+}
+
+.waveform{
+  width:110px;height:20px;
+  display:flex;gap:6px;
+  margin:6px 0 14px 0;
+  opacity:0.2;
+  transition:0.3s;
+}
+.waveform.active{opacity:1}
+
+.waveform div{
+  width:8px;
+  height:6px;
+  border-radius:4px;
+  background:linear-gradient(180deg,var(--neon-cyan),var(--neon-purple));
+  animation:wave 1s infinite ease-in-out;
+  transform-origin:bottom;
+}
+.waveform div:nth-child(2){animation-delay:0.12s}
+.waveform div:nth-child(3){animation-delay:0.24s}
+.waveform div:nth-child(4){animation-delay:0.36s}
+.waveform div:nth-child(5){animation-delay:0.48s}
+
+@keyframes wave{
+  0%{height:6px}
+  50%{height:24px}
+  100%{height:6px}
+}
+
+/* ================= SCOREBOARD ==================== */
+.round-row{
+  background:rgba(0,0,0,0.12);
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:12px;
+}
+
+.tag{
+  background:linear-gradient(90deg,var(--neon-cyan),var(--neon-purple));
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  color:#001018;
+}
+
+
+
+/* ================= RESPONSIVE ==================== */
+@media (max-width:900px){
+  .card{grid-template-columns:1fr}
+  .header h1{font-size:44px;letter-spacing:12px}
+}

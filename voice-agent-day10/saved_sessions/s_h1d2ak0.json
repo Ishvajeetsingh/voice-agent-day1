@@ -1,0 +1,44 @@
+{
+  "saved_at": "2025-12-01T22:55:02.124087z",
+  "session_id": "s_h1d2ak0",
+  "data": {
+    "session_id": "s_h1d2ak0",
+    "player_name": "Kakarot.",
+    "current_round": 3,
+    "max_rounds": 3,
+    "rounds": [
+      {
+        "scenario": "you are a waiter informing a customer that their order escaped the kitchen.",
+        "transcript": "My apologies, but your lobster has left the building. We're preparing a new one now. End scene.",
+        "reaction": "honestly a bit rushed — slow down and develop building. more.",
+        "tags": [
+          "expanded",
+          "character-focused"
+        ],
+        "tone": "critical"
+      },
+      {
+        "scenario": "you are returning a cursed object to a skeptical shop owner.",
+        "transcript": "This mirror is haunted, my cat is speaking Latin and I need a refund. End scene.",
+        "reaction": "decent flow, but i'd love more commitment to speaking.",
+        "tags": [
+          "expanded",
+          "absurdist"
+        ],
+        "tone": "neutral"
+      },
+      {
+        "scenario": "you are a barista who has to tell a customer that their latte is actually a portal to another dimension.",
+        "transcript": "Careful with that latte. It's a portal to another universe. Just a heads up end scene.",
+        "reaction": "you can push the character more — especially at Just.",
+        "tags": [
+          "expanded",
+          "story-focused"
+        ],
+        "tone": "critical"
+      }
+    ],
+    "phase": "done",
+    "summary": "overall you came across as expanded. standout moment: \"My apologies, but your lobster has left the building. We're ...\""
+  }
+}
